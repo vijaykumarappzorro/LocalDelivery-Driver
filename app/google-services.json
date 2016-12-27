@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "202443975610",
+    "firebase_url": "https://driver-local-delivery.firebaseio.com",
+    "project_id": "driver-local-delivery",
+    "storage_bucket": "driver-local-delivery.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:202443975610:android:aa15c8f65f64de90",
+        "android_client_info": {
+          "package_name": "com.localdelivery.driver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "202443975610-9li578d3olm50h8pibsknj1iihue58h7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-rg_93xj-NXb8pcr10aJnJv-inwbITeo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

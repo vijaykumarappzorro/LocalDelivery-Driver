@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_high_demad_area"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.localdelivery.driver.views.HighDemadArea">
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:titleTextColor="@android:color/black"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:minHeight="?attr/actionBarSize"
+        android:id="@+id/toolbar" />
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@+id/toolbar"/>
+    <TextView
+        android:id="@+id/txtinstruction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="#FF11BFE9"
+        android:layout_below="@+id/view1"
+        android:layout_marginTop="20dp"
+        style="@style/Base.TextAppearance.AppCompat.Medium"
+        android:text="High demand area let you pick more riders than other areas !"/>
+
+    <ImageView
+        android:id="@+id/imgdemand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_icon_pins"
+        android:layout_below="@id/txtinstruction"/>
+    <TextView
+        android:id="@+id/txtinstruction2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_below="@+id/imgdemand"
+        android:textColor="@android:color/black"
+        style="@style/Base.TextAppearance.AppCompat.Small"
+        android:text="Riders are waiting for you in these location"/>
+    <ListView
+        android:id="@+id/listviewitem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtinstruction2"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+    </ListView>
+</RelativeLayout>

@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Local Delivery Driver</string>
+    <string name="hint_mail">E-mail address</string>
+    <string name="hint_password">Password</string>
+    <string name="sign_in">Sign in</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="new_here_sign_up">New here? Sign Up</string>
+    <string name="or_sign_in_using"> Or Sign In Using </string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="first_name">First Name</string>
+    <string name="mobile">Mobile</string>
+    <string name="vehicle_type">Vehicle Type</string>
+    <string name="last_name">Last Name</string>
+    <string name="register">Register</string>
+    <string name="facebook">Facebook</string>
+    <string name="facebook_app_id">1681492212148729</string>
+</resources>
