@@ -2,17 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp">
+
         <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/imgcustomer"
+            android:id="@+id/customerImage"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:src="@drawable/ic_icon_pic"/>
+
         <TextView
-            android:id="@+id/txtname"
+            android:id="@+id/customerName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -20,30 +23,37 @@
             android:text="Vijay Kumar"
             style="@style/Base.TextAppearance.AppCompat.Small"
             android:textColor="@android:color/black"
-            android:layout_toRightOf="@+id/imgcustomer" />
+            android:layout_toRightOf="@+id/customerImage" />
+
         <TextView
-            android:id="@+id/txttimeago"
+            android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txtname"
-            android:layout_toRightOf="@+id/imgcustomer"
+            android:layout_below="@+id/customerName"
+            android:layout_toRightOf="@+id/customerImage"
             android:layout_marginLeft="10dp"
-            android:text="2 Weak ago"
-            android:textSize="12dp"
+            android:text="2 Weaks ago"
+            android:textSize="12sp"
             android:layout_marginTop="5dp"/>
+
         <RatingBar
-            android:id="@+id/ratingbar"
+            android:id="@+id/customerRatings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:numStars="5"
             android:layout_alignParentRight="true"
             style="?android:attr/ratingBarStyleSmall"
             android:layout_marginTop="10dp"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/ratingbar"
+            android:layout_below="@+id/customerRatings"
             android:text="Rating: 4/5"
+            android:visibility="gone"
             android:layout_marginTop="5dp" />
+
     </RelativeLayout>
+
 </LinearLayout>

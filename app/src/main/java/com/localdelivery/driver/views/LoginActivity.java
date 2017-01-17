@@ -1,13 +1,10 @@
 package com.localdelivery.driver.views;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,20 +18,14 @@ import com.localdelivery.driver.R;
 import com.localdelivery.driver.controller.ModelManager;
 import com.localdelivery.driver.model.Constants;
 import com.localdelivery.driver.model.Event;
+import com.localdelivery.driver.model.LDPreferences;
 import com.localdelivery.driver.model.Operations;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import cc.cloudist.acplibrary.ACProgressFlower;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-
-/*--------- this is login screen of the app here  user can login if already register with us and also choose the facebook login
-option , if user choose the facebook login the first user check facebook detail and match with own server if the email id already register with us
-then check the vicle type if already exit then go to the home screen of the app ---------------------Created by Vijay Kumar
- */
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -43,8 +34,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     ACProgressFlower dialog;
     EditText editEmail, editPassword;
     ImageView img_fb;
-    SharedPreferences userdetailSharedP,loginSharedP;
-    SharedPreferences.Editor editor,editor1;
     TextView txtresetpassword;
     CallbackManager callbackManager;
     private final static String TAG = LoginActivity.class.getSimpleName();
@@ -56,23 +45,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         AppEventsLogger.activateApp(this);
         setContentView(R.layout.activity_login);
 
-
         mContext = this;
 
         initViews();
 
-       /* try {
-            PackageInfo info = getPackageManager().getPackageInfo("com.localdelivery.driver", PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.e("MY KEY HASH:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }*/
     }
 
     public void initViews() {
@@ -95,7 +71,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         int id = view.getId();
 
         if (id == R.id.img_fb) {
-           ModelManager.getInstance().getLoginManager().doFacebookLogin(mContext, callbackManager);
+            ModelManager.getInstance().getFacebookLoginManager().doFacebookLogin(mContext, callbackManager);
         }
     }
 
@@ -104,7 +80,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
 
-        ModelManager.getInstance().getLoginManager().getFacebookData(mContext);
+        ModelManager.getInstance().getFacebookLoginManager().getFacebookData(mContext);
 
     }
 
@@ -122,14 +98,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         dialog.show();
 
         ModelManager.getInstance().getLoginManager().getLoginData(mContext, Operations.getLoginDetails(mContext, email, password,
-                "token", "A", "driver", "12.223231", "12.121213"));
+                LDPreferences.readString(mContext, "device_token"), "A", "driver", "30.709720", "76.689878"));
     }
-    public void forgottext(View v){
+
+    public void forgotPassword(View v) {
 
         Intent intent = new Intent(LoginActivity.this,ForgotPasswordActivity.class);
         startActivity(intent);
-
-
     }
 
     public void registerBtn(View v) {
@@ -156,23 +131,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         switch (event.getKey()) {
             case Constants.LOGIN_SUCCESS:
-                dialog.dismiss();
-                loginSharedP = getSharedPreferences("LOGINDETAIL", Context.MODE_PRIVATE);
-                editor1 = loginSharedP.edit();
 
-                String loginstatus = event.getValue();
-                String[] split = loginstatus.split(",");
-                int id = Integer.parseInt(split[split.length-2]);
-                String message = split[split.length-1];
-                editor1.putString("status","logged").apply();
-                dialog = new ACProgressFlower.Builder(this).build();
-                dialog.show();
-                ModelManager.getInstance().getUserDetailManager().getuserDeatil(mContext,Operations.getUserDeatil(mContext,String.valueOf(id),"driver"));
+                String loginStatus = event.getValue();
+                LDPreferences.putString(mContext, "status", "logged");
+                ModelManager.getInstance().getUserDetailManager().getUserDetails(mContext,Operations.getUserDetail(mContext,loginStatus,"driver"));
 
                 break;
+
             case Constants.ACCOUNT_NOT_REGISTERED:
 
-                Toast.makeText(mContext, event.getValue(), Toast.LENGTH_SHORT).show();
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
@@ -181,6 +148,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         .setContentText(event.getValue())
                         .show();
                 break;
+
             case Constants.FACEBOOK_LOGIN_SUCCESS:
                 Toast.makeText(LoginActivity.this,"facebooklogin",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
@@ -190,45 +158,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 intent.putExtra("profileimage",event.getImageUrl());
                 intent.putExtra("emailid",event.getEmailid());
                 startActivity(intent);
-               // Toast.makeText(mContext, "Name: "+event.getName()+ "\n Id: "+event.getId(), Toast.LENGTH_SHORT).show();
                 break;
 
-
-            case Constants.userfullDetail:
+            case Constants.USER_DETAILS_SUCCESS:
 
                 dialog.dismiss();
 
-                Toast.makeText(mContext,"done"+event.getValue(),Toast.LENGTH_LONG).show();
-                userdetailSharedP = getSharedPreferences("USERDEATIL", Context.MODE_PRIVATE);
-                editor = userdetailSharedP.edit();
-                Log.e("after login","you can get the user detail"+event.getValue());
-                try {
-                    JSONObject jsonObject = new JSONObject(event.getValue());
-                    JSONObject jsonObject1 = jsonObject.getJSONObject("response");
-                    String userid = jsonObject1.getString("id");
-                    String firstname = jsonObject1.getString("firstname");
-                    String lastname = jsonObject1.getString("lastname");
-                    String fullname = firstname+" "+lastname;
-                    String emailid = jsonObject1.getString("email");
-                    String mobile =  jsonObject1.getString("mobile");
-                    String vehicletype = jsonObject1.getString("vehicle_type");
-                    String profilepic = jsonObject1.getString("profile_pic");
-
-/*-----------   save the all detail of the user  locally ---------------------------------*/
-
-                    editor.putString("name",fullname).apply();
-                    editor.putString("emailid",emailid).apply();
-                    editor.putString("mobile",mobile).apply();
-                    editor.putString("userid",userid).apply();
-                    editor.putString("profilepic",profilepic).apply();
-
-                    Intent intent1 = new Intent(mContext,HomePageActivity.class);
-                    startActivity(intent1);
-                    finish();
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                Intent intent1 = new Intent(mContext,HomePageActivity.class);
+                startActivity(intent1);
+                finish();
                 break;
 
         }

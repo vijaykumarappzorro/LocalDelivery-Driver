@@ -3,23 +3,27 @@ package com.localdelivery.driver.controller;
 
 public class ModelManager {
 
-    LoginManager loginManager;
-    SignUpManager signUpManager;
-    UpdateManager updateManager;
-    ForgotPassManager forgotPassManager;
-    UserDetailManager userDetailManager;
-    VerifyEmailManager verifyEmailManager;
+    private LoginManager loginManager;
+    private FacebookLoginManager facebookLoginManager;
+    private SignUpManager signUpManager;
+    private UpdateManager updateManager;
+    private ForgotPassManager forgotPassManager;
+    private UserDetailManager userDetailManager;
+    private VerifyEmailManager verifyEmailManager;
+    private PendingRequestsManager pendingRequestsManager;
 
 
     private static ModelManager modelManager;
 
-    public ModelManager() {
+    private ModelManager() {
         loginManager = new LoginManager();
+        facebookLoginManager = new FacebookLoginManager();
         signUpManager = new SignUpManager();
         updateManager = new UpdateManager();
         forgotPassManager = new ForgotPassManager();
         userDetailManager = new UserDetailManager();
         verifyEmailManager = new VerifyEmailManager();
+        pendingRequestsManager = new PendingRequestsManager();
 
     }
 
@@ -32,6 +36,10 @@ public class ModelManager {
 
     public LoginManager getLoginManager() {
         return loginManager;
+    }
+
+    public FacebookLoginManager getFacebookLoginManager() {
+        return facebookLoginManager;
     }
 
     public SignUpManager getSignUpManager() {
@@ -51,5 +59,9 @@ public class ModelManager {
 
     public VerifyEmailManager getVerifyEmailManager() {
         return verifyEmailManager;
+    }
+
+    public PendingRequestsManager getPendingRequestsManager() {
+        return pendingRequestsManager;
     }
 }

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".views.SettingActivity">
+    tools:context=".views.ProfileActivity">
 
     <item
         android:id="@+id/edit"
@@ -11,6 +11,7 @@
         android:title="edit"
         android:icon="@drawable/ic_icon_edit"
         app:showAsAction="always"/>
+
     <item
         android:id="@+id/tick"
         android:orderInCategory="300"
@@ -18,4 +19,5 @@
         android:visible="false"
         android:icon="@drawable/ic_icon_tick"
         app:showAsAction="ifRoom"/>
+
 </menu>

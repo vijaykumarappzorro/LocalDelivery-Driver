@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.localdelivery.driver.R;
 
-public class HighDemadArea extends AppCompatActivity {
+public class HighDemandArea extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

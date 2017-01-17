@@ -4,40 +4,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_home_page_"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.localdelivery.driver.views.HomePageActivity">
+    android:layout_height="match_parent">
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        tools:context="com.learn2crack.myapplication.MainActivity">
-        <android.support.design.widget.AppBarLayout
+        android:fitsSystemWindows="true">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay">
+            android:layout_height="match_parent">
+
+            <fragment
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:name="com.google.android.gms.maps.SupportMapFragment">
+            </fragment>
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimaryDark"
+                android:layout_alignTop="@+id/map"
+                android:background="@android:color/transparent"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
-        </android.support.design.widget.AppBarLayout>
-        <fragment
-            android:id="@+id/map"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar1"
-            android:layout_marginTop="55dp"
-            android:name="com.google.android.gms.maps.SupportMapFragment">
-        </fragment>
+
+        </RelativeLayout>
+
     </android.support.design.widget.CoordinatorLayout>
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"
         android:layout_height="match_parent"
         android:layout_width="wrap_content"
         android:layout_gravity="start"
-        android:background="#000000"
-        app:itemIconTint="#40bfff"
+        android:background="#040A15"
+        app:itemIconTint="#ffffff"
         app:itemTextColor="@android:color/white"
         app:headerLayout="@layout/nav_header_layout"
         app:menu="@menu/nav_bar_menu"/>

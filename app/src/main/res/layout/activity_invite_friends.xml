@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.localdelivery.driver.views.InviteFriendsActivity">
+
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,12 +16,14 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:minHeight="?attr/actionBarSize"
         android:id="@+id/toolbar" />
+
     <View
         android:id="@+id/view1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
         android:layout_below="@+id/toolbar"/>
+
     <ImageView
         android:id="@+id/carimage"
         android:layout_width="wrap_content"
@@ -29,16 +32,17 @@
         android:layout_marginTop="40dp"
         android:layout_centerHorizontal="true"
         android:src="@drawable/ic_icon_car_coins"/>
+
     <TextView
         android:id="@+id/txtheading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Refer friends to drive"
         android:layout_centerHorizontal="true"
-        style="@style/AVLoadingIndicatorView.Large"
         android:textColor="#FF11BFE9"
         android:layout_below="@+id/carimage"
         android:layout_marginTop="20dp" />
+
     <TextView
         android:id="@+id/txtinstruction"
         android:layout_width="wrap_content"
@@ -49,6 +53,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:text="Invite a friends to drive and you may get a chance to earn upto Rs.1000"/>
+
     <Button
         android:id="@+id/btninvite"
         android:layout_width="match_parent"
@@ -61,4 +66,5 @@
         android:onClick="inviteClick"
         android:background="@drawable/ic_icon_blue_bg"
         android:text="INVITE FRIEND"/>
+
 </RelativeLayout>

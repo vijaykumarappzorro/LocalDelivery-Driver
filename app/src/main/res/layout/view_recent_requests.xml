@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_icon_pic"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:id="@+id/customerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sharon P."
+                    android:textStyle="bold"
+                    android:layout_alignParentLeft="true"
+                    android:textColor="#000000"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="2 minutes ago"/>
+
+                <TextView
+                    android:id="@+id/txtProduct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PRODUCT"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/customerName"/>
+
+                <TextView
+                    android:id="@+id/products"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3 Lounge Chairs \n1 Sofa"
+                    android:layout_below="@+id/txtProduct"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#000000"/>
+
+                <TextView
+                    android:id="@+id/txtPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PRICE"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/customerName"/>
+
+                <TextView
+                    android:id="@+id/price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="Rs. 200"
+                    android:layout_below="@+id/txtProduct"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#000000"/>
+
+                <TextView
+                    android:id="@+id/txtDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DATE"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/products"/>
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="04 Jan 2016"
+                    android:layout_below="@+id/txtDate"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#000000"/>
+
+                <TextView
+                    android:id="@+id/txtTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TIME"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/products"/>
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="01:00 PM"
+                    android:layout_below="@+id/txtTime"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#000000"/>
+                <TextView
+                    android:id="@+id/txtPickup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pickup_address"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/date"/>
+                <TextView
+                    android:id="@+id/pickup_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="#1701, First Floor, \nSector 22B, \nChandigarh, \n160022"
+                    android:layout_below="@+id/txtPickup"
+                    android:layout_alignRight="@+id/txtPickup"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#000000"/>
+                <TextView
+                    android:id="@+id/txtDrop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delivery_address"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/date"/>
+
+                <TextView
+                    android:id="@+id/drop_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_toRightOf="@+id/pickup_address"
+                    android:layout_alignLeft="@+id/txtDrop"
+                    android:gravity="end"
+                    style="?android:attr/textAppearanceSmall"
+                    android:text="#4009, First Floor, \nSector 35D, \nChandigarh, \n160022"
+                    android:layout_below="@+id/txtDrop"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#000000"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PICKUP"
+                    android:layout_below="@+id/pickup_address"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/round_shape"
+                    android:textColor="#ffffff"
+                    style="?android:attr/textAppearanceSmall"
+                    android:textStyle="bold"
+                    android:paddingLeft="50dp"
+                    android:paddingRight="50dp"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

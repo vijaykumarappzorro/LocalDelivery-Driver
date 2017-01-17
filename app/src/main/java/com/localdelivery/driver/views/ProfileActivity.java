@@ -10,9 +10,11 @@ import android.widget.ImageView;
 
 import com.localdelivery.driver.R;
 
-public class SettingActivity extends AppCompatActivity {
+import static com.localdelivery.driver.R.id.carimage;
+
+public class ProfileActivity extends AppCompatActivity {
     Toolbar toolbar;
-    ImageView imgedit1,imageedit2,imageedit3,imageedit4,driverimae,carimage;
+    ImageView driverImage,carImage;
     EditText edtname,edtcarname,edtphone,edtemail;
     MenuItem shareditem;
 
@@ -20,14 +22,10 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
+        setContentView(R.layout.activity_profile);
         initViews();
-
-
-
     }
 
-/*------------ here all widgt are intilize of Setting screen-------------------------*/
     public void initViews() {
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle("Setting");
@@ -40,12 +38,13 @@ public class SettingActivity extends AppCompatActivity {
         edtcarname =(EditText)findViewById(R.id.edtcarname);
         edtphone =(EditText)findViewById(R.id.edtphonenumer);
         edtemail =(EditText)findViewById(R.id.edtemailid);
-        driverimae =(ImageView)findViewById(R.id.driverimage);
-        carimage =(ImageView)findViewById(R.id.carimage);
-        HideEditText();
+        driverImage =(ImageView)findViewById(R.id.driverimage);
+        carImage =(ImageView)findViewById(carimage);
+        hideEditText();
 
     }
-    public void HideEditText(){
+
+    public void hideEditText(){
 
         edtname.setEnabled(false);
         edtname.setClickable(false);
@@ -56,8 +55,8 @@ public class SettingActivity extends AppCompatActivity {
         edtcarname.setEnabled(false);
         edtcarname.setEnabled(false);
     }
-    public void enableeditText(){
 
+    public void enableEditText(){
 
         edtname.setEnabled(true);
         edtname.setClickable(true);
@@ -67,8 +66,6 @@ public class SettingActivity extends AppCompatActivity {
         edtphone.setEnabled(true);
         edtcarname.setEnabled(true);
         edtcarname.setEnabled(true);
-
-
     }
 
 
@@ -91,30 +88,18 @@ public class SettingActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.tick:
-                HideEditText();
+                hideEditText();
                 shareditem.setVisible(false);
                 break;
             case R.id.edit:
                 shareditem.setVisible(true);
-                enableeditText();
+                enableEditText();
                 break;
 
         }
 
-
-      /*  //noinspection SimplifiableIfStatement
-        if (id == R.id.tick) {
-
-
-            return true;
-        }
-        else  if (id==R.id.edit){
-
-
-
-        }
-*/
         return super.onOptionsItemSelected(item);
     }
+
 
 }

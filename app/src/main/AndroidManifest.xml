@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme"
         tools:replace="android:label, android:icon, android:theme">
         <activity android:name=".views.LoginActivity" />
-        <activity android:name=".views.SplashActivity" >
+        <activity android:name=".views.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,13 +42,27 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDwL_7-o3UBVaOMhzjSZEz87JnEhZCptVk" />
 
-        <activity android:name=".views.SettingActivity" />
-        <activity android:name=".views.InviteFriendsActivity">
-
-        </activity>
-        <activity android:name=".views.HighDemadArea" />
+        <activity android:name=".views.ProfileActivity" />
+        <activity android:name=".views.InviteFriendsActivity" />
+        <activity android:name=".views.HighDemandArea" />
         <activity android:name=".views.RatingScreenActivity" />
-        <activity android:name=".views.CustomerRequestActivity"></activity>
+        <activity android:name=".views.CustomerRequestActivity" />
+        <activity android:name=".views.EarningsActivity" />
+        <activity android:name=".views.TripsActivity" />
+        <activity android:name=".views.CompletedTripsDetailsActivity" />
+
+        <service android:name=".model.FireIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service android:name=".model.FireMsgService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

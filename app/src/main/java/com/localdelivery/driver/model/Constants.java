@@ -10,7 +10,9 @@ public class Constants {
     public  static final int vechile_check=1005;
     public  static  final int update_status=1006;
     public  static  final int forgotpasswprd =1007;
-    public  static  final  int userfullDetail = 1008;
+    public static final int USER_DETAILS_SUCCESS = 1008;
     public  static  final  int verifyemailid = 1009;
+
+    public static final int PENDING_REQUESTS = 1010;
 
 }

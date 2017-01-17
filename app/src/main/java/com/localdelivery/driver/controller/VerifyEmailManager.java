@@ -46,9 +46,6 @@ public class VerifyEmailManager  {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.e("verify  response",s);
-
-
         }
     }
 

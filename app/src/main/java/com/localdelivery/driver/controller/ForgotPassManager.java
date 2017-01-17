@@ -21,7 +21,7 @@ public class ForgotPassManager {
     private static final String TAG = ForgotPassManager.class.getSimpleName();
 
 
-    public void ForgotPassManager(Context context, String params) {
+    public void forgotPassword(Context context, String params) {
 
         new ForgotPassManager.ExecuteApi(context).execute(params);
     }
@@ -45,7 +45,7 @@ public class ForgotPassManager {
             HttpHandler httpHandler = new HttpHandler();
             String response = httpHandler.makeServiceCall(params[0]);
 
-            Log.e(TAG, "forgot password "+response);
+            Log.e(TAG, "forgot-password response--"+response);
 
             return response;
         }
@@ -53,7 +53,6 @@ public class ForgotPassManager {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.e("forgot passwordresponse",s);
 
             try {
                 JSONObject jsonObject = new JSONObject(s);
@@ -62,7 +61,8 @@ public class ForgotPassManager {
                 String message = jsonObject1.getString("message");
 
 
-                    EventBus.getDefault().post(new Event(Constants.forgotpasswprd,String.valueOf(id)+","+message ));
+                EventBus.getDefault().post(new Event(Constants.forgotpasswprd,
+                        String.valueOf(id)+","+message ));
 
 
             } catch (JSONException ex) {

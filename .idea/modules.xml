@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LocalDeliveryDriver.iml" filepath="$PROJECT_DIR$/LocalDeliveryDriver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LocalDelivery-Driver.iml" filepath="$PROJECT_DIR$/LocalDelivery-Driver.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

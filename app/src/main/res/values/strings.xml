@@ -15,4 +15,17 @@
     <string name="register">Register</string>
     <string name="facebook">Facebook</string>
     <string name="facebook_app_id">1681492212148729</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="view_details">View Details</string>
+    <string name="pickup_address">PICKUP ADDRESS</string>
+    <string name="delivery_address">DELIVERY ADDRESS</string>
+    <string name="home">Home</string>
+    <string name="trips">Trips</string>
+    <string name="requests">Requests</string>
+    <string name="earnings">Earnings</string>
+    <string name="ratings">Ratings</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
 </resources>

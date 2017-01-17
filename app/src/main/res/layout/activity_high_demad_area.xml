@@ -5,7 +5,8 @@
     android:id="@+id/activity_high_demad_area"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.localdelivery.driver.views.HighDemadArea">
+    tools:context="com.localdelivery.driver.views.HighDemandArea">
+
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,6 +54,7 @@
         android:textColor="@android:color/black"
         style="@style/Base.TextAppearance.AppCompat.Small"
         android:text="Riders are waiting for you in these location"/>
+
     <ListView
         android:id="@+id/listviewitem"
         android:layout_width="match_parent"
@@ -62,4 +64,5 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp">
     </ListView>
+
 </RelativeLayout>

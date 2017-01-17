@@ -4,16 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -26,12 +21,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.localdelivery.driver.R;
+import com.localdelivery.driver.model.LDPreferences;
 import com.wang.avi.AVLoadingIndicatorView;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /*this is first screen of the app here userlogin status are checked  if user are not login then go for
 login screen otherwise go to home screen to the directly -------------------Created by  Vijay Kumar*/
@@ -41,9 +33,8 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     private Handler handler;
     private Runnable runnable;
     AVLoadingIndicatorView avi;
-    SharedPreferences sharedPreferences;
+
     private GoogleApiClient googleApiClient;
-    String loginstatus="";
 
     final static int REQUEST_LOCATION = 199;
 
@@ -52,25 +43,13 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        String token = FirebaseInstanceId.getInstance().getToken();
-        Log.e("device tiken ",""+token);
-            try {
-            PackageInfo info = getPackageManager().getPackageInfo("com.localdelivery.driver", PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.e("MY KEY HASH:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
+//        String token = FirebaseInstanceId.getInstance().getToken();
+     //   Log.e("device token ",""+token);
 
-        } catch (NoSuchAlgorithmException e) {
-
-        }
 
  /* -----------this sharedPrefernce get the user login status the user already login in the device or not -------------------*/
 
-        sharedPreferences = getSharedPreferences("LOGINDETAIL", Context.MODE_PRIVATE);
-       loginstatus= sharedPreferences.getString("status","");
+
 
         avi = (AVLoadingIndicatorView)findViewById(R.id.avi);
 
@@ -91,7 +70,8 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
         runnable = new Runnable() {
             @Override
             public void run() {
-                if (loginstatus.equals("logged")){
+
+                if ( LDPreferences.readString(SplashActivity.this, "status").equals("logged")){
 
                     Intent intent = new Intent(SplashActivity.this,HomePageActivity.class);
                     startActivity(intent);

@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.localdelivery.driver.R;
@@ -17,24 +16,20 @@ import com.localdelivery.driver.controller.ModelManager;
 import com.localdelivery.driver.model.Constants;
 import com.localdelivery.driver.model.Event;
 import com.localdelivery.driver.model.Operations;
+import com.localdelivery.driver.model.Utility;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import cc.cloudist.acplibrary.ACProgressFlower;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-//This Activity used for reset the pasword of the user and send the reset link to registered mail id ...CREATED BY VIJAY KUMAR
 
-public class ForgotPasswordActivity extends AppCompatActivity {
+public class ForgotPasswordActivity extends AppCompatActivity implements View.OnClickListener {
     Context context;
     Toolbar toolbar;
-    TextView instrution;
     Button reset;
-    EditText emailid;
+    EditText editEmail;
     ACProgressFlower dialog;
 
 
@@ -45,28 +40,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         context = this;
         initViews();
 
-
-        reset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                if (emailid.getText().toString().isEmpty()){
-                    emailid.setError("Required");
-                }
-                else if (!emailValidator(emailid.getText().toString())){
-
-                    emailid.setError("Please fill the valid email id");
-                }
-                else{
-                    dialog = new ACProgressFlower.Builder(context).build();
-                    dialog.show();
-                    ModelManager.getInstance().getForgotPassManager().ForgotPassManager(context, Operations.forgotpassword(context,emailid.getText().toString().trim(),"driver"));
-                }
-            }
-        });
     }
- /*------------    here intilize the all widght  and set the tool bar title-------*/
 
     public void initViews() {
         toolbar = (Toolbar)findViewById(R.id.toolbar);
@@ -77,23 +51,30 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
         }
 
-        instrution =(TextView)findViewById(R.id.txtprotocol);
         reset =(Button)findViewById(R.id.btnreset);
-        emailid =(EditText)findViewById(R.id.edtemail);
+        editEmail =(EditText)findViewById(R.id.edtemail);
+
+        reset.setOnClickListener(this);
 
     }
 
-/*------------------ This fuction used for validiate email domain--------*/
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btnreset:
 
-    public boolean emailValidator(String email)
-    {
-        Pattern pattern;
-        Matcher matcher;
-        final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-        pattern = Pattern.compile(EMAIL_PATTERN);
-        matcher = pattern.matcher(email);
-        return matcher.matches();
+               if (!Utility.emailValidator(editEmail.getText().toString())){
+                   editEmail.setError("Please enter the valid email address");
+                }
+                else{
+                    dialog = new ACProgressFlower.Builder(context).build();
+                    dialog.show();
+                    ModelManager.getInstance().getForgotPassManager().forgotPassword(context, Operations.forgotpassword(context,editEmail.getText().toString().trim(),"driver"));
+                }
+                break;
+        }
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -107,6 +88,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         EventBus.getDefault().unregister(context);
     }
+
     @Subscribe
     public void onEvent(Event event) {
 
@@ -114,13 +96,13 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             case Constants.forgotpasswprd:
                 dialog.dismiss();
                 String message = event.getValue();
-                Log.e("message recieved",message);
+                Log.e("message: ",message);
                 String[] split = message.split(",");
                 int id = Integer.parseInt(split[split.length-2]);
                 String status = split[split.length-1];
                 Toast.makeText(context, event.getValue(), Toast.LENGTH_SHORT).show();
 
-                if (id>0){
+                if (id > 0) {
                     new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
                             .setTitleText("Email sent successfully ")
                             .setContentText(status)
@@ -135,6 +117,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 break;
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

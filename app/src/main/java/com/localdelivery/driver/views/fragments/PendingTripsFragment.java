@@ -1,5 +1,4 @@
-package com.localdelivery.driver.views.fragment.activity;
-
+package com.localdelivery.driver.views.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,16 +9,15 @@ import android.view.ViewGroup;
 import com.localdelivery.driver.R;
 
 /**
- * Created by vijay on 26/12/16.
+ * Created by rishav on 2/1/17.
  */
 
-public class AllRequest extends Fragment {
-
+public class PendingTripsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.recent_request_adapter, container, false);
+        return inflater.inflate(R.layout.fragment_pending_trips, container, false);
     }
 }

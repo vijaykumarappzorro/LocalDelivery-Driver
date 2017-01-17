@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,13 +28,12 @@ import com.localdelivery.driver.R;
 import com.localdelivery.driver.controller.ModelManager;
 import com.localdelivery.driver.model.Constants;
 import com.localdelivery.driver.model.Event;
+import com.localdelivery.driver.model.LDPreferences;
 import com.localdelivery.driver.model.Operations;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,7 +43,7 @@ import java.io.IOException;
 
 import cc.cloudist.acplibrary.ACProgressFlower;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
     Toolbar toolbar;
     private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
@@ -57,8 +55,6 @@ public class SignUpActivity extends AppCompatActivity {
     CallbackManager callbackManager;
     String status1 ="simple";
     String id="";
-    SharedPreferences userdetailSharedP,loginShared;
-    SharedPreferences.Editor editor,editor2;
 
     String first_name,last_name,email,password="",mobile="",vehicle_type="" ,profileimage,lat,lng,devicetoken;
 
@@ -68,53 +64,43 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         context = this;
- // get the device token  using the firbase and it used  for push notification
+
         devicetoken = FirebaseInstanceId.getInstance().getToken();
-        Log.e("devicetoken of ","the android device"+devicetoken);
+
+        LDPreferences.putString(context, "device_token", devicetoken);
+
 
         initViews();
 
-        driverimage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectImage();
-                hideKeybord(v);
-            }
-        });
         convertImageToBase64();
-        Intent intent = getIntent();
-        if (intent!=null){
 
-
-            String login_status = intent.getStringExtra("facebooklogin");
-            if (login_status!=null) {
-                first_name = intent.getStringExtra("firstname");
-                last_name = intent.getStringExtra("lastname");
-                email = intent.getStringExtra("emailid");
-                profileimage = intent.getStringExtra("profileimage");
-                Picasso.with(this)
-                        .load(profileimage)
-                        .into(driverimage);
-
-                Log.e("userr detail", first_name + "\n" + last_name + "\n" + email + "\n" + profileimage + "\n" +vehicle_type);
-
-                dialog = new ACProgressFlower.Builder(this).build();
-                dialog.show();
-                ModelManager.getInstance().getSignUpManager().getSignUpDetails(context, Operations.getSignUpDetails(context, email,
-                        first_name, last_name, password, mobile, devicetoken, "A", "driver", vehicle_type, "12.1212121", "12.313112133", profileimage));
-            }
-            else {
-
-
-            }
-
-        }
-
+        checkLogin();
 
 
     }
 
-  //  the image converted into base64 code ...............................
+    void checkLogin() {
+        Intent intent = getIntent();
+
+        String login_status = intent.getStringExtra("facebooklogin");
+        if (login_status!=null) {
+            first_name = intent.getStringExtra("firstname");
+            last_name = intent.getStringExtra("lastname");
+            email = intent.getStringExtra("emailid");
+            profileimage = intent.getStringExtra("profileimage");
+            Picasso.with(this)
+                    .load(profileimage)
+                    .into(driverimage);
+
+            Log.e("user detail", first_name + "\n" + last_name + "\n" + email + "\n" + profileimage + "\n" +vehicle_type);
+
+            dialog = new ACProgressFlower.Builder(this).build();
+            dialog.show();
+            ModelManager.getInstance().getSignUpManager().getSignUpDetails(context, Operations.getSignUpDetails(context, email,
+                    first_name, last_name, password, mobile, devicetoken, "A", "driver", vehicle_type, "30.709720", "76.689878", profileimage));
+        }
+    }
+    //  the image converted into base64 code ...............................
 
     public  void convertImageToBase64() {
         Bitmap bit = BitmapFactory.decodeResource(getResources(),
@@ -134,8 +120,6 @@ public class SignUpActivity extends AppCompatActivity {
                         cameraIntent();
                     else if (userChoosenTask.equals("Choose from Library"))
                         galleryIntent();
-                } else {
-                    //code for deny
                 }
                 break;
         }
@@ -213,7 +197,6 @@ public class SignUpActivity extends AppCompatActivity {
         covertedImage = Base64.encodeToString(byteArray, 0);
         Log.e("camera images",covertedImage);
 
-
     }
 
     @SuppressWarnings("deprecation")
@@ -233,14 +216,7 @@ public class SignUpActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        else {
-
-        }
-
-        //convertImageToBase64(bm);
     }
-
-// All wight are intilizeing here ............
 
     public void initViews() {
         toolbar = (Toolbar)findViewById(R.id.toolbar);
@@ -259,15 +235,25 @@ public class SignUpActivity extends AppCompatActivity {
         editMobile = (EditText)findViewById(R.id.editMobile);
         edit_vehicleType = (EditText)findViewById(R.id.edit_vehicleType);
         driverimage = (ImageView)findViewById(R.id.driverimage);
+        driverimage.setOnClickListener(this);
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+
+        if (id == R.id.driverimage) {
+            selectImage();
+            hideKeybord(view);
+        }
     }
 
     public void registerBtn(View v) {
 
-
         vehicle_type = edit_vehicleType.getText().toString();
-        if (status1.equals("facebook")) {
 
+        if (status1.equals("facebook")) {
 
             if (vehicle_type.isEmpty()) {
 
@@ -275,36 +261,34 @@ public class SignUpActivity extends AppCompatActivity {
                 return;
             }
 
-                Log.e("id of the user", id);
+            Log.e("id of the user", id);
 
 
-                dialog = new ACProgressFlower.Builder(this).build();
-                dialog.show();
-             ModelManager.getInstance().getUpdateManager().getupdatedetail(context, Operations.updatevichletype(context, id, vehicle_type));
+            dialog = new ACProgressFlower.Builder(this).build();
+            dialog.show();
 
-                //ModelManager.getInstance().getSignUpManager().getSignUpDetails(context, Operations.updatevichletype(context, id, edit_vehicleType.getText().toString()));
-
+            ModelManager.getInstance().getUpdateManager().getupdatedetail(context, Operations.updatevichletype(context, id, vehicle_type));
 
             return;
         }
-            status1 ="simple";
-            first_name = edit_firstName.getText().toString();
-            last_name = edit_lastName.getText().toString();
-            email = editEmail.getText().toString();
-            password = editPassword.getText().toString();
-            mobile = editMobile.getText().toString();
-            if (first_name.isEmpty() || last_name.isEmpty() || email.isEmpty() || password.isEmpty() || mobile.isEmpty() || vehicle_type.isEmpty()) {
-                Toast.makeText(context, "Please fill all the details", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            dialog = new ACProgressFlower.Builder(this).build();
-            dialog.show();
-            ModelManager.getInstance().getSignUpManager().getSignUpDetails(context, Operations.getSignUpDetails(context,
-                    email, first_name, last_name, password, mobile, devicetoken, "A", "driver", vehicle_type, "12.1212121", "12.313112133", "profile_pic"));
 
-
-
+        status1 ="simple";
+        first_name = edit_firstName.getText().toString();
+        last_name = edit_lastName.getText().toString();
+        email = editEmail.getText().toString();
+        password = editPassword.getText().toString();
+        mobile = editMobile.getText().toString();
+        if (first_name.isEmpty() || last_name.isEmpty() || email.isEmpty() || password.isEmpty() || mobile.isEmpty() || vehicle_type.isEmpty()) {
+            Toast.makeText(context, "Please fill all the details", Toast.LENGTH_SHORT).show();
+            return;
         }
+        dialog = new ACProgressFlower.Builder(this).build();
+        dialog.show();
+
+        ModelManager.getInstance().getSignUpManager().getSignUpDetails(context, Operations.getSignUpDetails(context,
+                email, first_name, last_name, password, mobile, devicetoken, "A", "driver", vehicle_type, "12.1212121", "12.313112133", "profile_pic"));
+
+    }
 
     @Override
     protected void onStart() {
@@ -337,15 +321,15 @@ public class SignUpActivity extends AppCompatActivity {
             case Constants.ACCOUNT_NOT_REGISTERED:
                 Toast.makeText(context, event.getValue(), Toast.LENGTH_SHORT).show();
                 break;
+
             case  Constants.vechile_check:
                 String status = event.getValue();
                 Log.e("status",status);
 
                 String[] split = status.split(",");
                 String completestatus = split[split.length-2];
-                 id = split[split.length-1];
-                Log.e("complete status",completestatus);
-                Log.e("iddd",id);
+                id = split[split.length-1];
+
                 if (completestatus.equals("false")) {
                     edit_firstName.setText(first_name);
                     edit_lastName.setText(last_name);
@@ -363,89 +347,59 @@ public class SignUpActivity extends AppCompatActivity {
                     status1 = "facebook";
                 }
                 else {
-                    if (password.length()>0){
-                        Log.e("dimplereee","djjd");
+                    if (password.length()>0) {
+
                         Intent intent = new Intent(context,LoginActivity.class);
                         startActivity(intent);
                         finish();
                     }
                     else {
-
-                        ModelManager.getInstance().getUserDetailManager().getuserDeatil(context,Operations.getUserDeatil(context,id,"driver"));
-                       /* Intent intent = new Intent(SignUpActivity.this, HomePageActivity.class);
-                        startActivity(intent);
-                        finish();*/
+                        ModelManager.getInstance().getUserDetailManager().getUserDetails(context,Operations.getUserDetail(context,id,"driver"));
                     }
                 }
                 break;
+
             case Constants.update_status:
-                dialog.dismiss();
+
                 String updatestatus= event.getValue();
-                Log.e("update starissss",updatestatus);
                 String[] splittext = updatestatus.split(",");
-                loginShared = getSharedPreferences("LOGINDETAIL", Context.MODE_PRIVATE);
-                editor2 = loginShared.edit();
-                editor2.putString("status","logged").apply();
+                LDPreferences.putString(context, "status", "logged");
+
                 String id = splittext[splittext.length-2];
                 String vehiclestatus = splittext[splittext.length-1];
+
                 if (vehiclestatus.equals("true")){
-                    dialog = new ACProgressFlower.Builder(this).build();
-                    dialog.show();
-                    ModelManager.getInstance().getUserDetailManager().getuserDeatil(context,Operations.getUserDeatil(context,id,"driver"));
+                    ModelManager.getInstance().getUserDetailManager().getUserDetails(context,Operations.getUserDetail(context,id,"driver"));
                 }
                 else {
 
                     dialog.dismiss();
-                    Toast.makeText(context, "your vehicle type is not update please update again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Please update your vehicle type again.", Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case Constants.userfullDetail:
+
+            case Constants.USER_DETAILS_SUCCESS:
 
                 dialog.dismiss();
 
-                Toast.makeText(context,"done"+event.getValue(),Toast.LENGTH_LONG).show();
-                userdetailSharedP = getSharedPreferences("USERDEATIL", Context.MODE_PRIVATE);
-                editor = userdetailSharedP.edit();
-                Log.e("after login","you can get the user detail"+event.getValue());
-                try {
-                    JSONObject jsonObject = new JSONObject(event.getValue());
-                    JSONObject jsonObject1 = jsonObject.getJSONObject("response");
-                    String userid = jsonObject1.getString("id");
-                    String firstname = jsonObject1.getString("firstname");
-                    String lastname = jsonObject1.getString("lastname");
-                    String fullname = firstname+" "+lastname;
-                    String emailid = jsonObject1.getString("email");
-                    String mobile =  jsonObject1.getString("mobile");
-                    String vehicletype = jsonObject1.getString("vehicle_type");
-                    String profilepic = jsonObject1.getString("profile_pic");
+                Intent intent1 = new Intent(context,HomePageActivity.class);
+                startActivity(intent1);
+                finish();
 
-/*-----------   save the all detail of the user  locally ---------------------------------*/
-
-                    editor.putString("name",fullname).apply();
-                    editor.putString("emailid",emailid).apply();
-                    editor.putString("mobile",mobile).apply();
-                    editor.putString("userid",userid).apply();
-                    editor.putString("profilepic",profilepic).apply();
-
-                    Intent intent1 = new Intent(context,HomePageActivity.class);
-                    startActivity(intent1);
-                    finish();
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
                 break;
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                 break;
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -460,4 +414,5 @@ public class SignUpActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
 
     }
+
 }
