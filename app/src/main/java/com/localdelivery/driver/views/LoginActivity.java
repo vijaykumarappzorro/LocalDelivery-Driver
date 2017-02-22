@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.localdelivery.driver.R;
 import com.localdelivery.driver.controller.ModelManager;
 import com.localdelivery.driver.model.Constants;
@@ -36,6 +38,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     ImageView img_fb;
     TextView txtresetpassword;
     CallbackManager callbackManager;
+    String device_token;
     private final static String TAG = LoginActivity.class.getSimpleName();
 
     @Override
@@ -47,6 +50,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         mContext = this;
 
+     device_token = FirebaseInstanceId.getInstance().getToken();
         initViews();
 
     }
@@ -64,6 +68,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         img_fb.setOnClickListener(this);
         txtresetpassword =(TextView)findViewById(R.id.txtforgotpassword);
+        device_token = FirebaseInstanceId.getInstance().getToken();
+        Log.e("ddd",device_token);
     }
 
     @Override
@@ -98,7 +104,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         dialog.show();
 
         ModelManager.getInstance().getLoginManager().getLoginData(mContext, Operations.getLoginDetails(mContext, email, password,
-                LDPreferences.readString(mContext, "device_token"), "A", "driver", "30.709720", "76.689878"));
+              device_token, "A", "driver", "30.710252502759392", "76.70373268425465"));
     }
 
     public void forgotPassword(View v) {

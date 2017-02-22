@@ -6,15 +6,19 @@ package com.localdelivery.driver.model.Beans;
 
 public class CompletedTripsBeans {
 
-    private String orderId, price, customerName, tripDate, tripTime, imageUrl;
+    private String orderId, price, picklocaton,droplocation,distance, customerName, tripDate, tripTime, imageUrl;
 
-    public CompletedTripsBeans(String orderId, String price, String customerName, String tripDate, String tripTime, String imageUrl) {
+    public CompletedTripsBeans(String orderId, String price,String picklocaton,String droplocation,String disatnce ,String customerName, String tripDate, String tripTime, String imageUrl) {
         this.orderId = orderId;
         this.price = price;
+        this.picklocaton =picklocaton;
+        this.droplocation = droplocation;
+        this.distance = disatnce;
         this.customerName = customerName;
         this.tripDate = tripDate;
         this.tripTime = tripTime;
         this.imageUrl = imageUrl;
+
     }
 
     public String getOrderId() {
@@ -31,6 +35,18 @@ public class CompletedTripsBeans {
 
     public String getTripDate() {
         return tripDate;
+    }
+
+    public String getPicklocaton() {
+        return picklocaton;
+    }
+
+    public String getDroplocation() {
+        return droplocation;
+    }
+
+    public String getDistance() {
+        return distance;
     }
 
     public String getTripTime() {

@@ -21,11 +21,15 @@ import com.localdelivery.driver.views.adapters.RecentRequestAdapter;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import cc.cloudist.acplibrary.ACProgressFlower;
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 public class RecentRequestsFragment extends Fragment {
 
     Context context;
     RecyclerView recyclerView;
+    ACProgressFlower dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,22 +37,18 @@ public class RecentRequestsFragment extends Fragment {
 
         context = getActivity();
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = LayoutInflater.from(context).inflate(R.layout.fragment_recent_requests, container, false);
 
-        ModelManager.getInstance().getPendingRequestsManager().getRecentRequests(context, Operations.getPendingRequests(context,
-                LDPreferences.readString(context, "driver_id")));
 
         initViews(view);
 
         return view;
     }
-
     public void initViews(View v) {
+
         recyclerView = (RecyclerView)v.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
     }
@@ -67,6 +67,15 @@ public class RecentRequestsFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
+        ModelManager.getInstance().getPendingRequestsManager().getRecentRequests(context, Operations.getPendingRequests(context,
+                LDPreferences.readString(context, "driver_id")));
+    }
+
     @Subscribe
     public void onEvent(Event event) {
         switch (event.getKey()) {
@@ -74,6 +83,25 @@ public class RecentRequestsFragment extends Fragment {
                 RecentRequestAdapter adapter = new RecentRequestAdapter(context, PendingRequestsManager.recentRequestsList);
                 recyclerView.setAdapter(adapter);
                 break;
+
+            case Constants.REQUESTACEPT:
+
+                dialog.dismiss();
+                String completemessage = event.getValue();
+                String split1[] = completemessage.split(",");
+                int reponseid = Integer.parseInt(split1[split1.length - 2]);
+                String responsemessage = split1[split1.length - 1];
+                if (reponseid > 0) {
+                    new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
+                            .setTitleText(responsemessage)
+                            .setContentText("Please wait for some time until you dont any response from the Response")
+                            .show();
+                } else {
+                    new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText(responsemessage)
+                            .setContentText("Your request is  not sent to Customer due to bad inernet connection please try again")
+                            .show();
+                }
         }
     }
 }

@@ -60,28 +60,41 @@ public class PendingRequestsManager {
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
                 for (int i=0; i<2; i++) {
                     JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-
                     String request_id = jsonObject1.getString("request_id");
-                    String customer_id = jsonObject1.getString("customer_id");
-                    String firstName = jsonObject1.getString("firstname");
-                    String lastName = jsonObject1.getString("lastname");
-                    String pickUp_location = jsonObject1.getString("pickup_location");
-                    String drop_location = jsonObject1.getString("drop_location");
-                    String price = jsonObject1.getString("price");
-                    String source_lat = jsonObject1.getString("source_latitude");
-                    String source_lng = jsonObject1.getString("source_longitude");
-                    String dest_lat = jsonObject1.getString("destination_latitude");
-                    String dest_lng = jsonObject1.getString("destination_longitude");
+                    int id = Integer.parseInt(request_id);
+                    if (id>0) {
+                        String customer_id = jsonObject1.getString("customer_id");
+                        String firstName = jsonObject1.getString("firstname");
+                        String lastName = jsonObject1.getString("lastname");
+                        String pickUp_location = jsonObject1.getString("pickup_location");
+                        String drop_location = jsonObject1.getString("drop_location");
+                        String price = jsonObject1.getString("price");
+                        String source_lat = jsonObject1.getString("source_latitude");
+                        String source_lng = jsonObject1.getString("source_longitude");
+                        String dest_lat = jsonObject1.getString("destination_latitude");
+                        String dest_lng = jsonObject1.getString("destination_longitude");
+                        String product_descrption = jsonObject1.getString("product_desc");
+                        String datetime = jsonObject1.getString("datetime");
+                        String[] split = datetime.split(" ");
+                        String date = split[split.length-2];
+                        String time = split[split.length-1];
 
-                    PendingRequestsBeans pendingRequestsBeans = new PendingRequestsBeans(request_id, customer_id,
-                            firstName, lastName, pickUp_location, drop_location, price, source_lat, source_lng, dest_lat, dest_lng);
+                        PendingRequestsBeans pendingRequestsBeans = new PendingRequestsBeans(request_id, customer_id,
+                                firstName, lastName, pickUp_location, drop_location, price, source_lat, source_lng, dest_lat, dest_lng,product_descrption,date,time);
+                        recentRequestsList.add(pendingRequestsBeans);
+                        EventBus.getDefault().post(new Event(Constants.PENDING_REQUESTS, request_id+","+"true"));
+                    }
+                    else {
 
-                    recentRequestsList.add(pendingRequestsBeans);
+                            String message = jsonObject1.getString("message");
+                        EventBus.getDefault().post(new Event(Constants.PENDING_REQUESTS, request_id+","+message));
+
+                    }
 
                     /*EventBus.getDefault().post(new Event(Constants.PENDING_REQUESTS, firstName, lastName, request_id, customer_id,
                             pickUp_location, drop_location, price));*/
                 }
-                EventBus.getDefault().post(new Event(Constants.PENDING_REQUESTS, ""));
+               // EventBus.getDefault().post(new Event(Constants.PENDING_REQUESTS, ""));
 
             } catch (JSONException ex) {
                 ex.printStackTrace();
@@ -117,26 +130,41 @@ public class PendingRequestsManager {
                     JSONObject jsonObject1 = jsonArray.getJSONObject(i);
 
                     String request_id = jsonObject1.getString("request_id");
-                    String customer_id = jsonObject1.getString("customer_id");
-                    String firstName = jsonObject1.getString("firstname");
-                    String lastName = jsonObject1.getString("lastname");
-                    String pickUp_location = jsonObject1.getString("pickup_location");
-                    String drop_location = jsonObject1.getString("drop_location");
-                    String price = jsonObject1.getString("price");
-                    String source_lat = jsonObject1.getString("source_latitude");
-                    String source_lng = jsonObject1.getString("source_longitude");
-                    String dest_lat = jsonObject1.getString("destination_latitude");
-                    String dest_lng = jsonObject1.getString("destination_longitude");
+                    int id = Integer.parseInt(request_id);
+                    if (id>0) {
+                        String customer_id = jsonObject1.getString("customer_id");
+                        String firstName = jsonObject1.getString("firstname");
+                        String lastName = jsonObject1.getString("lastname");
+                        String pickUp_location = jsonObject1.getString("pickup_location");
+                        String drop_location = jsonObject1.getString("drop_location");
+                        String price = jsonObject1.getString("price");
+                        String source_lat = jsonObject1.getString("source_latitude");
+                        String source_lng = jsonObject1.getString("source_longitude");
+                        String dest_lat = jsonObject1.getString("destination_latitude");
+                        String dest_lng = jsonObject1.getString("destination_longitude");
+                        String product_descrption = jsonObject1.getString("product_desc");
+                        String datetime = jsonObject1.getString("datetime");
+                        String[] split = datetime.split(" ");
+                        String date = split[split.length-2];
+                        String time = split[split.length-1];
 
-                    PendingRequestsBeans pendingRequestsBeans = new PendingRequestsBeans(request_id, customer_id,
-                            firstName, lastName, pickUp_location, drop_location, price, source_lat, source_lng, dest_lat, dest_lng);
+                        PendingRequestsBeans pendingRequestsBeans = new PendingRequestsBeans(request_id, customer_id,
+                                firstName, lastName, pickUp_location, drop_location, price, source_lat, source_lng, dest_lat, dest_lng,product_descrption,date,time);
 
-                    allRequestsList.add(pendingRequestsBeans);
+                        allRequestsList.add(pendingRequestsBeans);
+                        EventBus.getDefault().post(new Event(Constants.PENDING_REQUESTS, request_id+","+"true"));
+                    }
+                    else {
+
+                        String message = jsonObject1.getString("message");
+                        EventBus.getDefault().post(new Event(Constants.PENDING_REQUESTS, request_id+","+message));
+
+                    }
 
                     /*EventBus.getDefault().post(new Event(Constants.PENDING_REQUESTS, firstName, lastName, request_id, customer_id,
                             pickUp_location, drop_location, price));*/
                 }
-                EventBus.getDefault().post(new Event(Constants.PENDING_REQUESTS, ""));
+
 
             } catch (JSONException ex) {
                 ex.printStackTrace();

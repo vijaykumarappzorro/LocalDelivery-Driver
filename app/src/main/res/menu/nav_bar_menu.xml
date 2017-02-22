@@ -21,4 +21,7 @@
     <item android:id="@+id/logout"
         android:title="@string/logout"
         android:icon="@drawable/ic_icon_logout_white"/>
+    <item android:id="@+id/mapview"
+        android:title="Mapview"
+        android:icon="@drawable/ic_icon_logout_white"/>
 </menu>

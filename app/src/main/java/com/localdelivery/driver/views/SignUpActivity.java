@@ -97,7 +97,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             dialog = new ACProgressFlower.Builder(this).build();
             dialog.show();
             ModelManager.getInstance().getSignUpManager().getSignUpDetails(context, Operations.getSignUpDetails(context, email,
-                    first_name, last_name, password, mobile, devicetoken, "A", "driver", vehicle_type, "30.709720", "76.689878", profileimage));
+                    first_name, last_name, password, mobile, devicetoken, "A", "driver", vehicle_type, "30.710252502759392", "76.70373268425465", profileimage));
         }
     }
     //  the image converted into base64 code ...............................

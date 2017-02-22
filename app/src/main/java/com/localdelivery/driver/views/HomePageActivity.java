@@ -2,10 +2,18 @@ package com.localdelivery.driver.views;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,8 +29,12 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -36,12 +48,14 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.localdelivery.driver.R;
 import com.localdelivery.driver.controller.ModelManager;
 import com.localdelivery.driver.controller.PendingRequestsManager;
 import com.localdelivery.driver.model.Beans.PendingRequestsBeans;
 import com.localdelivery.driver.model.Constants;
+import com.localdelivery.driver.model.Date_Time;
 import com.localdelivery.driver.model.Event;
 import com.localdelivery.driver.model.LDPreferences;
 import com.localdelivery.driver.model.Operations;
@@ -49,6 +63,9 @@ import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import cc.cloudist.acplibrary.ACProgressFlower;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.localdelivery.driver.R.id.map;
 
@@ -58,11 +75,14 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
     public static final String TAG = HomePageActivity.class.getSimpleName();
     Toolbar toolbar;
     GoogleMap googleMap;
+    TextView date,time;
 
     private GoogleApiClient mGoogleApiClient;
     DrawerLayout drawerLayout;
     Activity activity;
     Circle mCircle;
+    ACProgressFlower dialog;
+    Dialog bidform;
 
 
     Location mLastLocation;
@@ -83,7 +103,6 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
 
         ModelManager.getInstance().getPendingRequestsManager().getCompleteRequests(activity, Operations.getPendingRequests(activity,
                 LDPreferences.readString(activity, "driver_id")));
-
         initNavigationDrawer();
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(map);
@@ -111,6 +130,160 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
         }
 
         this.googleMap.setMyLocationEnabled(true);
+
+        googleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+            @Override
+            public void onCameraMoveStarted(int i) {
+
+                Log.e("on move started","mmap");
+
+            }
+        });
+        googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                Log.e("on camera move","mmap");
+
+            }
+        });
+        googleMap.setOnCameraMoveCanceledListener(new GoogleMap.OnCameraMoveCanceledListener() {
+            @Override
+            public void onCameraMoveCanceled() {
+                Log.e("on move cancel","mmap");
+
+
+            }
+        });
+        googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+
+                Log.e("on move idle","mmap");
+                ModelManager.getInstance().getPendingRequestsManager().getRecentRequests(activity, Operations.getPendingRequests(activity,
+                        LDPreferences.readString(activity,"driver_id")));
+
+
+
+            }
+        });
+
+ // click on marker icon and get the detail of customer request and driver also replay the customer rquest on the map screen
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                LatLng latLng = marker.getPosition();
+                String lat = String.valueOf(latLng.latitude);
+                String lng = String.valueOf(latLng.longitude);
+
+                Log.e("marker lat lng",lat+"\n"+lng);
+                int size = PendingRequestsManager.allRequestsList.size();
+                for (int i = 0; i < size; i++) {
+                    PendingRequestsBeans pendingRequestsBeans = PendingRequestsManager.allRequestsList.get(i);
+                    String source_latitude = pendingRequestsBeans.getSource_lat();
+                    String source_longitude = pendingRequestsBeans.getSource_lng();
+                    final String requestid = pendingRequestsBeans.getRequest_id();
+                    final String customerid = pendingRequestsBeans.getCustomer_id();
+                    if (source_latitude.equals(lat)&&source_longitude.equals(lng)){
+
+                        bidform = new Dialog(activity);
+                        bidform.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        bidform.setContentView(R.layout.driver_bid_form);
+                        TextView edtpick= (TextView) bidform.findViewById(R.id.picked_location);
+                        TextView edttitle= (TextView) bidform.findViewById(R.id.titlebar);
+                        TextView edtcustomer_price=(TextView)bidform.findViewById(R.id.customerprice);
+                        TextView edtdrop= (TextView) bidform.findViewById(R.id.destination);
+                        final EditText edtprice= (EditText)bidform.findViewById(R.id.price);
+                        edttitle.setText("Bid Form");
+                        edtcustomer_price.setText("Customer Price :"+pendingRequestsBeans.getPrice());
+
+                       date = (TextView)bidform.findViewById(R.id.datepicker);
+                       time = (TextView)bidform.findViewById(R.id.timepicker);
+                        Button requestbutton = (Button)bidform.findViewById(R.id.btnsend);
+                        Button dialogCloseButton = (Button)bidform.findViewById(R.id.btncancel);
+                        edtpick.setText(pendingRequestsBeans.getPickup_location());
+                        edtdrop.setText(pendingRequestsBeans.getDrop_location());
+                        edtprice.setTextColor(Color.parseColor("#000000"));
+
+
+                        date.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                Date_Time date_time = new Date_Time(activity);
+                                date_time.dateDialog();
+
+                            }
+                        });
+
+                        time.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                Date_Time  date_time = new Date_Time(activity);
+                                date_time.timedialog();
+                            }
+                        });
+
+
+
+                        dialogCloseButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                bidform.dismiss();
+
+                            }
+                        });
+                        requestbutton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+
+                            if (date.getText().toString().isEmpty()) {
+
+                                date.setError("Required");
+                            }
+                            else if (time.getText().toString().isEmpty())
+                            {
+                                time.setError("Required Time");
+
+                            }
+                                else if (edtprice.getText().toString().isEmpty()){
+
+                                edtprice.setError("Required price");
+
+                            }
+                            else {
+
+                                // here sen your bid to the customer
+                                dialog = new ACProgressFlower.Builder(activity).build();
+                                dialog.show();
+                                ModelManager.getInstance().getRequestAcecptManager().RequestAcecptManager(activity,Operations.acceptRequestofCustomer(activity,requestid,
+                                        customerid,LDPreferences.readString(activity, "driver_id"),edtprice.getText().toString().trim(),
+                                        date.getText().toString().replaceAll(" ",""),time.getText().toString().replaceAll(" ","")));
+
+                            }
+
+                            }
+                        });
+
+
+                        bidform.show();
+
+                    }
+
+
+
+                    String destination_latitude = pendingRequestsBeans.getDestination_lat();
+                    String destination_longitude = pendingRequestsBeans.getDestination_lng();
+
+
+
+                }
+
+                return false;
+            }
+        });
 
     }
 
@@ -161,6 +334,9 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
 
                     case R.id.earnings:
                         startActivity(new Intent(activity, EarningsActivity.class));
+                        break;
+                    case R.id.mapview:
+                        startActivity(new Intent(activity,RideStartMapView.class));
                         break;
                 }
 
@@ -243,31 +419,133 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        ModelManager.getInstance().getPendingRequestsManager().getRecentRequests(activity, Operations.getPendingRequests(activity,
+                LDPreferences.readString(activity,"driver_id")));
+
+
+    }
+
+    private Bitmap writeTextOnDrawable(int drawableId, String text) {
+
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), drawableId)
+                .copy(Bitmap.Config.ARGB_8888, true);
+
+        Typeface tf = Typeface.create("Helvetica", Typeface.NORMAL);
+
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.BLACK);
+        paint.setTypeface(tf);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextSize(convertToPixels(activity, 18));
+        Rect textRect = new Rect();
+        paint.getTextBounds(text, 0, text.length(), textRect);
+
+        Canvas canvas = new Canvas(bm);
+
+        //If the text is bigger than the canvas , reduce the font size
+        if(textRect.width() >= (canvas.getWidth() - 4))     //the padding on either sides is considered as 4, so as to appropriately fit in the text
+            paint.setTextSize(convertToPixels(activity, 18));        //Scaling needs to be used for different dpi's
+
+        //Calculate the positions
+        int xPos = (canvas.getWidth() / 2) - 2;     //-2 is for regulating the x position offset
+
+        //"- ((paint.descent() + paint.ascent()) / 2)" is the distance from the baseline to the center.
+        int yPos = (int) ((canvas.getHeight() / 2) - ((paint.descent() + paint.ascent()) / 2)) ;
+
+        canvas.drawText(text, xPos, yPos, paint);
+
+        return  bm;
+    }
+
+
+
+    public static int convertToPixels(Context context, int nDP)
+    {
+        final float conversionScale = context.getResources().getDisplayMetrics().density;
+
+        return (int) ((nDP * conversionScale) + 0.5f) ;
+
+    }
+
     @Subscribe
     public void onEvent(Event event) {
 
         switch (event.getKey()) {
             case Constants.PENDING_REQUESTS:
-                int size = PendingRequestsManager.allRequestsList.size();
-                for (int i=0; i < size; i++) {
-                    PendingRequestsBeans pendingRequestsBeans = PendingRequestsManager.allRequestsList.get(i);
-                    String source_latitude = pendingRequestsBeans.getSource_lat();
-                    String source_longitude = pendingRequestsBeans.getSource_lng();
+                String recivemessage= event.getValue();
+                String[] split = recivemessage.split(",");
+                googleMap.clear();
+                int id = Integer.parseInt(split[split.length-2]);
+                String message = split[split.length-1];
+                if (id>0) {
+                    int size = PendingRequestsManager.allRequestsList.size();
+                    Log.e("sizeee",String.valueOf(size));
 
-                    String destination_latitude = pendingRequestsBeans.getDestination_lat();
-                    String destination_longitude = pendingRequestsBeans.getDestination_lng();
+                    for (int i = 0; i<size; i++) {
+                        PendingRequestsBeans pendingRequestsBeans = PendingRequestsManager.allRequestsList.get(i);
+                        String source_latitude = pendingRequestsBeans.getSource_lat();
+                        String source_longitude = pendingRequestsBeans.getSource_lng();
 
-                    Log.e(TAG, "source lat---"+source_latitude);
-
-                    if (!source_latitude.isEmpty()) {
+                        String destination_latitude = pendingRequestsBeans.getDestination_lat();
+                        String destination_longitude = pendingRequestsBeans.getDestination_lng();
+                        Log.e(TAG, "source lat---" + source_latitude);
                         googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(source_latitude),
-                                Double.parseDouble(source_longitude))));
+                                    Double.parseDouble(source_longitude))));
+                        /*Marker myLocMarker = googleMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(Double.parseDouble(source_latitude),
+                                        Double.parseDouble(source_longitude)))
+                                .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.mipmap.circle, pendingRequestsBeans.getPrice()))));
+*/
                     }
                 }
+                else {
+
+                 /*   new SweetAlertDialog(activity, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Error")
+                            .setContentText(message)
+                            .show();*/
+                    googleMap.clear();
+
+                    Toast.makeText(activity,""+message,Toast.LENGTH_LONG).show();
+                }
+                break;
+            case Constants.DATEEVENT:
+                date.setText(""+event.getValue());
+                date.setTextColor(Color.parseColor("#000000"));
+                break;
+            case Constants.TIMEEVENT:
+                time.setText(""+event.getValue());
+                time.setTextColor(Color.parseColor("#000000"));
+                break;
+            case Constants.REQUESTACEPT:
+                dialog.dismiss();
+                String completemessage= event.getValue();
+                String split1 []=completemessage.split(",");
+                int reponseid = Integer.parseInt(split1[split1.length-2]);
+                String responsemessage = split1[split1.length-1];
+                if(reponseid>0){
+                    new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                            .setTitleText(responsemessage)
+                            .setContentText("Please wait for some time until you dont any response from the driver")
+                            .show();
+                }
+                else {
+                    new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText(responsemessage)
+                            .setContentText("Your request is  not sent to driver due to bad inernet connection please try again")
+                            .show();
+                }
+
+
         }
     }
 
-    private void initCamera(Location location) {
+ private void initCamera(Location location) {
 
         Log.e(TAG, "current location---"+location);
         //googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -295,19 +573,29 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
         params.setMargins(0, 0, 20, 0);
         btnMyLocation.setLayoutParams(params);*/
 
-        CameraPosition position = CameraPosition.builder()
-                .target( new LatLng( location.getLatitude(),
-                        location.getLongitude() ) )
-                .zoom( 16f )
+       /* CameraPosition position = CameraPosition.builder()
+                .target( new LatLng(30.707204,
+                        76.688556) )
+                .zoom( 14f )
                 .bearing( 0.0f )
                 .tilt( 0.0f )
                 .build();
+*/
 
+     CameraPosition position = CameraPosition.builder()
+             .target( new LatLng(location.getLatitude(),
+                     location.getLongitude()) )
+             .zoom( 14f )
+             .bearing( 0.0f )
+             .tilt( 0.0f )
+             .build();
 
 
         googleMap.setPadding(0, dpToPx(48), 0, 0);
-        double lat = location.getLatitude();
-        double lng= location.getLongitude();
+      //  double lat = location.getLatitude();
+      //  double lng= location.getLongitude();
+     double lat = location.getLatitude();
+     double lng= location.getLongitude();
         LatLng latLng = new LatLng(lat,lng);
 
 
@@ -315,7 +603,6 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
         googleMap.moveCamera(CameraUpdateFactory
                 .newCameraPosition(position));
         drawMarkerWithCircle(latLng);

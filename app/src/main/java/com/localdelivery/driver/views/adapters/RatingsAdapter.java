@@ -50,7 +50,6 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.ViewHold
         private TextView customerName, time;
         private RatingBar customerRatings;
         private CircularImageView customerImage;
-
          ViewHolder(View itemView) {
             super(itemView);
 

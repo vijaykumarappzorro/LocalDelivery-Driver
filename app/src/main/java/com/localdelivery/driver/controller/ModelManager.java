@@ -11,7 +11,8 @@ public class ModelManager {
     private UserDetailManager userDetailManager;
     private VerifyEmailManager verifyEmailManager;
     private PendingRequestsManager pendingRequestsManager;
-
+    private  RequestAcecptManager requestAcecptManager;
+    private CompletedTripsManager completedTripsManager;
 
     private static ModelManager modelManager;
 
@@ -24,6 +25,8 @@ public class ModelManager {
         userDetailManager = new UserDetailManager();
         verifyEmailManager = new VerifyEmailManager();
         pendingRequestsManager = new PendingRequestsManager();
+        requestAcecptManager = new RequestAcecptManager();
+        completedTripsManager = new CompletedTripsManager();
 
     }
 
@@ -32,6 +35,14 @@ public class ModelManager {
             return modelManager = new ModelManager();
         else
             return modelManager;
+    }
+
+    public RequestAcecptManager getRequestAcecptManager() {
+        return requestAcecptManager;
+    }
+
+    public CompletedTripsManager getCompletedTripsManager() {
+        return completedTripsManager;
     }
 
     public LoginManager getLoginManager() {

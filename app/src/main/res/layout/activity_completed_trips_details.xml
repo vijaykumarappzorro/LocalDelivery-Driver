@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_completed_trips_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
     <include layout="@layout/toolbar"
         android:id="@+id/toolbar"/>
 
@@ -149,6 +147,7 @@
                         android:textColor="#000000"/>
 
                     <TextView
+                        android:id="@+id/picaddress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -175,11 +174,11 @@
                         android:textColor="#000000"/>
 
                     <TextView
+                        android:id="@+id/dropaddress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="#f195, Appzorro,  \n SAS Nagar, Mohali \n 160055"/>
-
                 </LinearLayout>
 
             </LinearLayout>
@@ -203,12 +202,15 @@
                     android:layout_alignParentStart="true">
 
                     <TextView
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Base Fare"
                         android:textColor="#000000"/>
 
                     <TextView
+
+                        android:id="@+id/milesvalue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="6.95 Miles"
@@ -216,6 +218,7 @@
                         android:textColor="#000000"/>
 
                     <TextView
+                        android:id="@+id/timevalue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="26 minutes"
@@ -223,6 +226,7 @@
                         android:textColor="#000000"/>
 
                     <TextView
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Subtotal"
@@ -239,12 +243,14 @@
                     android:layout_alignParentEnd="true">
 
                     <TextView
+                        android:id="@+id/farevalue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="25"
                         android:textColor="#000000"/>
 
                     <TextView
+                        android:id="@+id/mailesfare"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="56.18"
@@ -252,6 +258,7 @@
                         android:textColor="#000000"/>
 
                     <TextView
+                        android:id="@+id/timefare"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="26"
@@ -259,6 +266,7 @@
                         android:textColor="#000000"/>
 
                     <TextView
+                        android:id="@+id/subtotal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="107.18"

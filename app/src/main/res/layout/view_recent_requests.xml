@@ -15,8 +15,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="20dp">
-
             <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profilepic"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/ic_icon_pic"
@@ -40,17 +40,18 @@
                     android:textColor="#000000"/>
 
                 <TextView
+                    android:id="@+id/Requestid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:text="2 minutes ago"/>
-
                 <TextView
                     android:id="@+id/txtProduct"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="PRODUCT"
-                    android:layout_marginTop="20dp"
+                    style="@style/Base.TextAppearance.AppCompat.Small"
+                    android:layout_marginTop="10dp"
                     android:layout_below="@+id/customerName"/>
 
                 <TextView
@@ -60,6 +61,7 @@
                     android:text="3 Lounge Chairs \n1 Sofa"
                     android:layout_below="@+id/txtProduct"
                     android:layout_marginTop="10dp"
+                    android:textSize="12dp"
                     android:textColor="#000000"/>
 
                 <TextView
@@ -68,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:text="PRICE"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_below="@+id/customerName"/>
 
                 <TextView
@@ -77,6 +79,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:text="Rs. 200"
+                    android:textSize="12dp"
                     android:layout_below="@+id/txtProduct"
                     android:layout_marginTop="10dp"
                     android:textColor="#000000"/>
@@ -86,9 +89,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="DATE"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_below="@+id/products"/>
-
                 <TextView
                     android:id="@+id/date"
                     android:layout_width="wrap_content"
@@ -96,15 +98,15 @@
                     android:text="04 Jan 2016"
                     android:layout_below="@+id/txtDate"
                     android:layout_marginTop="10dp"
+                    android:textSize="12dp"
                     android:textColor="#000000"/>
-
                 <TextView
                     android:id="@+id/txtTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TIME"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_below="@+id/products"/>
                 <TextView
                     android:id="@+id/time"
@@ -114,13 +116,15 @@
                     android:text="01:00 PM"
                     android:layout_below="@+id/txtTime"
                     android:layout_marginTop="10dp"
+                    android:textSize="12dp"
                     android:textColor="#000000"/>
                 <TextView
                     android:id="@+id/txtPickup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/pickup_address"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
+                    style="@style/Base.TextAppearance.AppCompat.Small"
                     android:layout_below="@+id/date"/>
                 <TextView
                     android:id="@+id/pickup_address"
@@ -129,6 +133,7 @@
                     android:text="#1701, First Floor, \nSector 22B, \nChandigarh, \n160022"
                     android:layout_below="@+id/txtPickup"
                     android:layout_alignRight="@+id/txtPickup"
+                    android:textSize="12dp"
                     android:layout_marginTop="10dp"
                     android:textColor="#000000"/>
                 <TextView
@@ -137,7 +142,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/delivery_address"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="20dp"
+                    style="@style/Base.TextAppearance.AppCompat.Small"
+                    android:layout_marginTop="10dp"
                     android:layout_below="@+id/date"/>
 
                 <TextView
@@ -148,6 +154,7 @@
                     android:layout_toRightOf="@+id/pickup_address"
                     android:layout_alignLeft="@+id/txtDrop"
                     android:gravity="end"
+                    android:textSize="12dp"
                     style="?android:attr/textAppearanceSmall"
                     android:text="#4009, First Floor, \nSector 35D, \nChandigarh, \n160022"
                     android:layout_below="@+id/txtDrop"
@@ -155,6 +162,7 @@
                     android:textColor="#000000"/>
 
                 <Button
+                    android:id="@+id/pickup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="PICKUP"

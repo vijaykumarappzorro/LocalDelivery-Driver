@@ -35,24 +35,20 @@ public class CompletedTripsAdapter extends RecyclerView.Adapter<CompletedTripsAd
     }
 
     @Override
-    public void onBindViewHolder(CompletedTripsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(CompletedTripsAdapter.ViewHolder holder, final int position) {
         final CompletedTripsBeans trips = list.get(position);
 
         holder.customerName.setText(trips.getCustomerName());
         holder.orderId.setText(trips.getOrderId());
         holder.cash.setText(trips.getPrice());
-        holder.tripDate.setText(String.format("Date: %s", trips.getTripDate()));
-        holder.tripTime.setText(String.format("Time: %s", trips.getTripTime()));
+        holder.tripDate.setText("Date: "+trips.getTripDate());
+        holder.tripTime.setText("Time: "+trips.getTripTime());
 
         holder.viewDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(context, CompletedTripsDetailsActivity.class);
-                i.putExtra("customer_name", trips.getCustomerName());
-                i.putExtra("order_id", trips.getOrderId());
-                i.putExtra("cash", trips.getPrice());
-                i.putExtra("trip_date", trips.getTripDate());
-                i.putExtra("trip_time", trips.getTripTime());
+                i.putExtra("postion",String.valueOf(position));
                 context.startActivity(i);
             }
         });

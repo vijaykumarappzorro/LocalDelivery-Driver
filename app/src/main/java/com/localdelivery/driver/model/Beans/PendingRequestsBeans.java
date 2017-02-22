@@ -7,11 +7,11 @@ package com.localdelivery.driver.model.Beans;
 public class PendingRequestsBeans {
 
     private String request_id, customer_id, first_name, last_name, pickup_location, drop_location, price,
-                    source_lat, source_lng, destination_lat, destination_lng;
+                    source_lat, source_lng, destination_lat, destination_lng,description,date,time;
 
     public PendingRequestsBeans(String request_id, String customer_id, String first_name, String last_name,
                                 String pickup_location, String drop_location, String price,
-                                String source_lat, String source_lng, String destination_lat, String destination_lng) {
+                                String source_lat, String source_lng, String destination_lat, String destination_lng,String descrption,String date,String time) {
         this.request_id = request_id;
         this.customer_id = customer_id;
         this.first_name = first_name;
@@ -23,6 +23,22 @@ public class PendingRequestsBeans {
         this.source_lng = source_lng;
         this.destination_lat = destination_lat;
         this.destination_lng = destination_lng;
+        this.description=descrption;
+        this.date=date;
+        this.time = time;
+
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getRequest_id() {

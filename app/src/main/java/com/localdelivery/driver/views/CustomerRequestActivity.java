@@ -18,8 +18,6 @@ import com.localdelivery.driver.views.fragments.RecentRequestsFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import cc.cloudist.acplibrary.ACProgressFlower;
-
 public class CustomerRequestActivity extends AppCompatActivity {
     Toolbar toolbar;
     TabLayout tabLayout;
@@ -32,8 +30,6 @@ public class CustomerRequestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_customer_request);
         mContext=this;
 
-        ACProgressFlower dialog = new ACProgressFlower.Builder(this).build();
-        dialog.show();
 
         initViews();
     }

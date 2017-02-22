@@ -8,13 +8,20 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.localdelivery.driver.R;
+import com.localdelivery.driver.controller.CompletedTripsManager;
+import com.localdelivery.driver.model.Beans.CompletedTripsBeans;
+
+import java.util.ArrayList;
 
 
 public class CompletedTripsDetailsActivity extends AppCompatActivity {
 
     Toolbar toolbar;
-    TextView customerName, cash, orderId, tripDate,tripTime;
+    TextView customerName, cash, orderId, tripDate,tripTime,picadd,dropadd,basefare,txtmiles,txtmilesfare,
+            txtminute,txttimefare,txtsubtotal;
     String customer_name, price, order_id, trip_date, trip_time;
+    ArrayList<CompletedTripsBeans>list;
+    int postion1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,15 @@ public class CompletedTripsDetailsActivity extends AppCompatActivity {
         orderId = (TextView)findViewById(R.id.orderId);
         tripDate = (TextView)findViewById(R.id.tripDate);
         tripTime = (TextView)findViewById(R.id.tripTime);
+        picadd =(TextView)findViewById(R.id.picaddress);
+        dropadd=(TextView)findViewById(R.id.dropaddress);
+        basefare=(TextView)findViewById(R.id.farevalue);
+        txtmiles=(TextView)findViewById(R.id.milesvalue);
+        txtmilesfare=(TextView)findViewById(R.id.mailesfare);
+        txtminute =(TextView)findViewById(R.id.timevalue) ;
+        txttimefare=(TextView)findViewById(R.id.timefare);
+        txtsubtotal=(TextView)findViewById(R.id.subtotal);
+
 
         getValues();
     }
@@ -49,12 +65,27 @@ public class CompletedTripsDetailsActivity extends AppCompatActivity {
         order_id = i.getStringExtra("order_id");
         trip_date = i.getStringExtra("trip_date");
         trip_time = i.getStringExtra("trip_time");
+        String postion  =i.getStringExtra("postion");
+        postion1 = Integer.parseInt(postion);
 
-        customerName.setText(customer_name);
-        cash.setText(price);
-        orderId.setText(order_id);
-        tripDate.setText(String.format("Date: %s", trip_date));
-        tripTime.setText(String.format("Time: %s", trip_time));
+        CompletedTripsBeans completedTripsBeans= CompletedTripsManager.completetriplist.get(postion1);
+
+
+
+        customerName.setText(completedTripsBeans.getCustomerName());
+
+        cash.setText(completedTripsBeans.getPrice());
+        orderId.setText(completedTripsBeans.getOrderId());
+        tripDate.setText("Date: "+completedTripsBeans.getTripDate());
+        tripTime.setText("Time: "+completedTripsBeans.getTripTime());
+        picadd.setText(completedTripsBeans.getPicklocaton());
+        dropadd.setText(completedTripsBeans.getDroplocation());
+        txtmiles.setText(completedTripsBeans.getDistance());
+        txtsubtotal.setText(completedTripsBeans.getPrice());
+
+
+
+
     }
 
     @Override

@@ -51,7 +51,7 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/customerRatings"
             android:text="Rating: 4/5"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_marginTop="5dp" />
 
     </RelativeLayout>

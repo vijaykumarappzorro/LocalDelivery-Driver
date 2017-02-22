@@ -82,4 +82,22 @@ public class Operations {
 
         return params;
     }
+    public static String acceptRequestofCustomer(Context context,String request_id,String customer_id,String driver_id,String estimatedcost,String estimateddate,String estimatedtime)
+    {
+
+
+        String parms = Config.accept_Rquest_customer+"&request_id="+request_id+"&customer_id="+customer_id+"&driver_id="+driver_id
+                +"&estimated_cost="+estimatedcost+"&estimated_date="+estimateddate+"&estimated_time="+estimatedtime;
+        Log.e("accept url",parms);
+        return parms;
+    }
+    public static String completedHistory(Context context,String id){
+
+        String parms= Config.completed_Trips+id;
+
+        Log.e("completed Trips","History  "+parms);
+
+
+        return parms;
+    }
 }
