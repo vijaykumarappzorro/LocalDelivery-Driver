@@ -18,5 +18,7 @@ public class Constants {
     public static  final  int TIMEEVENT=1012;
     public  static  final  int  REQUESTACEPT=1013;
     public  static  final  int COMPLETEDTRIPS=1014;
+    public static final int SERVER_ERROR=1015;
+    public static final int NOREQUEST=1016;
 
 }

@@ -167,7 +167,7 @@
                     android:layout_height="wrap_content"
                     android:text="PICKUP"
                     android:layout_below="@+id/pickup_address"
-                    android:layout_centerInParent="true"
+                    android:layout_alignParentRight="true"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/round_shape"
                     android:textColor="#ffffff"
@@ -175,7 +175,6 @@
                     android:textStyle="bold"
                     android:paddingLeft="50dp"
                     android:paddingRight="50dp"/>
-
             </RelativeLayout>
 
         </LinearLayout>

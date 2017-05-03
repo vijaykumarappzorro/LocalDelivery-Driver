@@ -1,5 +1,6 @@
 package com.localdelivery.driver.views.adapters;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -27,10 +28,10 @@ import com.localdelivery.driver.model.Utility;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import cc.cloudist.acplibrary.ACProgressFlower;
+import dmax.dialog.SpotsDialog;
 
 /*
- * Created by rishav on 4/1/17.
+ * Created by vijay on 4/1/17.
  */
 
 public class RecentRequestAdapter extends RecyclerView.Adapter<RecentRequestAdapter.ViewHolder> {
@@ -38,7 +39,7 @@ public class RecentRequestAdapter extends RecyclerView.Adapter<RecentRequestAdap
     private Context context;
     private ArrayList<PendingRequestsBeans> list;
     Dialog dialog;
-    ACProgressFlower dialog1;
+    AlertDialog progress_dialog;
 
     public RecentRequestAdapter(Context context, ArrayList<PendingRequestsBeans> list) {
         this.context = context;
@@ -61,15 +62,23 @@ public class RecentRequestAdapter extends RecyclerView.Adapter<RecentRequestAdap
         holder.pickup_location.setText(pendingRequests.getPickup_location());
         holder.drop_location.setText(pendingRequests.getDrop_location());
         holder.price.setText(pendingRequests.getPrice());
+
         holder.product_des.setText(pendingRequests.getDescription());
-        holder.date.setText(pendingRequests.getDate());
-        holder.time.setText(pendingRequests.getTime());
-        holder.price.setText(pendingRequests.getPrice());
+      /* *//* holder.date.setText(pendingRequests.getDate());
+        holder.time.setText(pendingRequests.getTime());*//*
+        holder.price.setText(pendingRequests.getPrice());*/
+
+        holder.date.setText("20-April-2017");
+        holder.time.setText("1:30 pm");
+        holder.price.setText("$125");
+
         holder.requestid.setText(pendingRequests.getRequest_id());
         holder.pickupbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                dialog = Utility.createDialog(context);
+                dialog.show();
+
                 final PendingRequestsBeans pendingRequestsBeans = PendingRequestsManager.allRequestsList.get(position);
                 TextView edtpick= (TextView) dialog.findViewById(R.id.picked_location);
                 TextView edttitle= (TextView) dialog.findViewById(R.id.titlebar);
@@ -173,8 +182,8 @@ public class RecentRequestAdapter extends RecyclerView.Adapter<RecentRequestAdap
                         else {
 
                             // here sen your bid to the customer
-                            dialog1 = new ACProgressFlower.Builder(context).build();
-                            dialog1.show();
+                            progress_dialog = new SpotsDialog(context);
+                           progress_dialog.show();
                             ModelManager.getInstance().getRequestAcecptManager().RequestAcecptManager(context, Operations.acceptRequestofCustomer(context,pendingRequestsBeans.getRequest_id(),
                                     pendingRequests.getCustomer_id(), LDPreferences.readString(context, "driver_id"),edtprice.getText().toString().trim(),
                                     date.getText().toString().replaceAll(" ",""),time.getText().toString().replaceAll(" ","")));

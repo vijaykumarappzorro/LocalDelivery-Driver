@@ -1,14 +1,13 @@
 package com.localdelivery.driver.views;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +17,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.localdelivery.driver.R;
 import com.localdelivery.driver.controller.ModelManager;
+import com.localdelivery.driver.model.Config;
 import com.localdelivery.driver.model.Constants;
 import com.localdelivery.driver.model.Event;
 import com.localdelivery.driver.model.LDPreferences;
@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import cc.cloudist.acplibrary.ACProgressFlower;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import dmax.dialog.SpotsDialog;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -35,10 +36,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Activity mContext;
     ACProgressFlower dialog;
     EditText editEmail, editPassword;
-    ImageView img_fb;
+   // ImageView img_fb;
     TextView txtresetpassword;
     CallbackManager callbackManager;
     String device_token;
+    AlertDialog progress_dialog;
     private final static String TAG = LoginActivity.class.getSimpleName();
 
     @Override
@@ -50,12 +52,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         mContext = this;
 
-     device_token = FirebaseInstanceId.getInstance().getToken();
+
+
+
         initViews();
 
     }
 
     public void initViews() {
+
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle("Login");
         setSupportActionBar(toolbar);
@@ -64,21 +69,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         callbackManager = CallbackManager.Factory.create();
 
-        img_fb = (ImageView)findViewById(R.id.img_fb);
+       // img_fb = (ImageView)findViewById(img_fb);
 
-        img_fb.setOnClickListener(this);
+        //img_fb.setOnClickListener(this);
         txtresetpassword =(TextView)findViewById(R.id.txtforgotpassword);
         device_token = FirebaseInstanceId.getInstance().getToken();
-        Log.e("ddd",device_token);
+
     }
 
     @Override
     public void onClick(View view) {
         int id = view.getId();
 
-        if (id == R.id.img_fb) {
+       /* if (id == img_fb) {
             ModelManager.getInstance().getFacebookLoginManager().doFacebookLogin(mContext, callbackManager);
-        }
+        }*/
     }
 
     @Override
@@ -97,14 +102,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(mContext, "Please fill all the details", Toast.LENGTH_SHORT).show();
-            return;
+
         }
 
-        dialog = new ACProgressFlower.Builder(this).build();
-        dialog.show();
+        progress_dialog = new SpotsDialog(mContext);
+        progress_dialog.show();
 
         ModelManager.getInstance().getLoginManager().getLoginData(mContext, Operations.getLoginDetails(mContext, email, password,
-              device_token, "A", "driver", "30.710252502759392", "76.70373268425465"));
+              device_token, Config.device_type,Config.user_type));
     }
 
     public void forgotPassword(View v) {
@@ -138,38 +143,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (event.getKey()) {
             case Constants.LOGIN_SUCCESS:
 
-                String loginStatus = event.getValue();
-                LDPreferences.putString(mContext, "status", "logged");
-                ModelManager.getInstance().getUserDetailManager().getUserDetails(mContext,Operations.getUserDetail(mContext,loginStatus,"driver"));
+                ModelManager.getInstance().getUserDetailManager().getUserDetails(mContext,Operations.getUserDetail(mContext,
+                        LDPreferences.readString(mContext,"driver_id"),Config.user_type));
 
                 break;
 
             case Constants.ACCOUNT_NOT_REGISTERED:
+                progress_dialog.dismiss();
 
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
                 new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                         .setTitleText("Error ")
                         .setContentText(event.getValue())
                         .show();
                 break;
 
-            case Constants.FACEBOOK_LOGIN_SUCCESS:
-                Toast.makeText(LoginActivity.this,"facebooklogin",Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-                intent.putExtra("facebooklogin","yes");
-                intent.putExtra("firstname",event.getFisrtname());
-                intent.putExtra("lastname",event.getLastname());
-                intent.putExtra("profileimage",event.getImageUrl());
-                intent.putExtra("emailid",event.getEmailid());
-                startActivity(intent);
-                break;
 
             case Constants.USER_DETAILS_SUCCESS:
-
-                dialog.dismiss();
-
+                 progress_dialog.dismiss();
+                LDPreferences.putString(mContext, "login_status", "true");
                 Intent intent1 = new Intent(mContext,HomePageActivity.class);
                 startActivity(intent1);
                 finish();

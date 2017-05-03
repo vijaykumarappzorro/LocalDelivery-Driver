@@ -71,7 +71,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
             @Override
             public void run() {
 
-                if ( LDPreferences.readString(SplashActivity.this, "status").equals("logged")){
+                if ( LDPreferences.readString(SplashActivity.this, "login_status").equals("true")){
 
                     Intent intent = new Intent(SplashActivity.this,HomePageActivity.class);
                     startActivity(intent);

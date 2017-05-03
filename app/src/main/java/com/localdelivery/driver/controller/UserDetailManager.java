@@ -53,30 +53,37 @@ public class UserDetailManager {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            if (s!=null) {
 
-            try {
-                JSONObject jsonObject = new JSONObject(s);
-                JSONObject jsonObject1 = jsonObject.getJSONObject("response");
-                String userId = jsonObject1.getString("id");
-                String firstName = jsonObject1.getString("firstname");
-                String lastName = jsonObject1.getString("lastname");
-                String fullName = firstName + " " + lastName;
-                String emailId = jsonObject1.getString("email");
-                String mobile = jsonObject1.getString("mobile");
-                String vehicleType = jsonObject1.getString("vehicle_type");
-                String profilePic = jsonObject1.getString("profile_pic");
+                try {
 
-                LDPreferences.putString(mContext, "name", fullName);
-                LDPreferences.putString(mContext, "emailId", emailId);
-                LDPreferences.putString(mContext, "mobile", mobile);
-                LDPreferences.putString(mContext, "userId", userId);
-                LDPreferences.putString(mContext, "profilePic", profilePic);
-                LDPreferences.putString(mContext, "vehicleType", vehicleType);
+                    JSONObject jsonObject = new JSONObject(s);
+                    JSONObject jsonObject1 = jsonObject.getJSONObject("response");
+                    String userId = jsonObject1.getString("id");
+                    String firstName = jsonObject1.getString("firstname");
+                    String lastName = jsonObject1.getString("lastname");
+                    String fullName = firstName + " " + lastName;
+                    String emailId = jsonObject1.getString("email");
+                    String mobile = jsonObject1.getString("mobile");
+                    String vehicleType = jsonObject1.getString("vehicle_type");
+                    String profilePic = jsonObject1.getString("profile_pic");
 
-                EventBus.getDefault().post(new Event(Constants.USER_DETAILS_SUCCESS,""));
+                    LDPreferences.putString(mContext, "driver_name", fullName);
+                    LDPreferences.putString(mContext, "email_Id", emailId);
+                    LDPreferences.putString(mContext, "mobile", mobile);
+                    LDPreferences.putString(mContext, "driver_id", userId);
+                    LDPreferences.putString(mContext, "driver_image", profilePic);
+                    LDPreferences.putString(mContext, "vehicle_type", vehicleType);
 
-            } catch (JSONException ex) {
-                ex.printStackTrace();
+                    EventBus.getDefault().post(new Event(Constants.USER_DETAILS_SUCCESS, ""));
+
+                } catch (JSONException ex) {
+                    ex.printStackTrace();
+                }
+            }else{
+
+                EventBus.getDefault().post(new Event(Constants.SERVER_ERROR, ""));
+
             }
 
 

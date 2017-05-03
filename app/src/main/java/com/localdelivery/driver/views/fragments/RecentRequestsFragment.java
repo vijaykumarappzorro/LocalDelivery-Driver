@@ -1,5 +1,6 @@
 package com.localdelivery.driver.views.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,28 +9,28 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.localdelivery.driver.R;
 import com.localdelivery.driver.controller.ModelManager;
 import com.localdelivery.driver.controller.PendingRequestsManager;
 import com.localdelivery.driver.model.Constants;
 import com.localdelivery.driver.model.Event;
-import com.localdelivery.driver.model.LDPreferences;
 import com.localdelivery.driver.model.Operations;
 import com.localdelivery.driver.views.adapters.RecentRequestAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import cc.cloudist.acplibrary.ACProgressFlower;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import dmax.dialog.SpotsDialog;
 
 
 public class RecentRequestsFragment extends Fragment {
 
     Context context;
     RecyclerView recyclerView;
-    ACProgressFlower dialog;
+    AlertDialog dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,16 +73,30 @@ public class RecentRequestsFragment extends Fragment {
         super.onResume();
 
 
-        ModelManager.getInstance().getPendingRequestsManager().getRecentRequests(context, Operations.getPendingRequests(context,
-                LDPreferences.readString(context, "driver_id")));
+       /* ModelManager.getInstance().getPendingRequestsManager().getRecentRequests(context, Operations.getPendingRequests(context,
+                LDPreferences.readString(context, "driver_id")));*/
+        dialog = new SpotsDialog(context);
+        dialog.show();
+        ModelManager.getInstance().getPendingRequestsManager().getRecentRequests(context, Operations.getPendingRequests(context
+               ,"6"));
     }
 
     @Subscribe
     public void onEvent(Event event) {
         switch (event.getKey()) {
             case Constants.PENDING_REQUESTS:
+                dialog.dismiss();
                 RecentRequestAdapter adapter = new RecentRequestAdapter(context, PendingRequestsManager.recentRequestsList);
                 recyclerView.setAdapter(adapter);
+                break;
+
+            case Constants.NOREQUEST:
+                dialog.dismiss();
+                Toast.makeText(context,"No customer Rquest yet",Toast.LENGTH_SHORT).show();
+                break;
+            case Constants.SERVER_ERROR:
+                dialog.dismiss();
+                Toast.makeText(context,"internet is too slow",Toast.LENGTH_SHORT).show();
                 break;
 
             case Constants.REQUESTACEPT:

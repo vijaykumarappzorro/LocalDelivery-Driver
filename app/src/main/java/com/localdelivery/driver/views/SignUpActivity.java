@@ -15,9 +15,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -26,11 +28,15 @@ import com.facebook.CallbackManager;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.localdelivery.driver.R;
 import com.localdelivery.driver.controller.ModelManager;
+import com.localdelivery.driver.model.Config;
 import com.localdelivery.driver.model.Constants;
 import com.localdelivery.driver.model.Event;
 import com.localdelivery.driver.model.LDPreferences;
 import com.localdelivery.driver.model.Operations;
-import com.squareup.picasso.Picasso;
+import com.localdelivery.driver.model.Utility;
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.OnBackPressListener;
+import com.orhanobut.dialogplus.OnCancelListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,7 +47,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import cc.cloudist.acplibrary.ACProgressFlower;
+import dmax.dialog.SpotsDialog;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -51,9 +57,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     EditText edit_firstName, edit_lastName, editEmail, editPassword, editMobile, edit_vehicleType;
     ImageView driverimage;
     Context context;
-    ACProgressFlower dialog;
+    android.app.AlertDialog progress_dialog;
     CallbackManager callbackManager;
-    String status1 ="simple";
     String id="";
 
     String first_name,last_name,email,password="",mobile="",vehicle_type="" ,profileimage,lat,lng,devicetoken;
@@ -72,14 +77,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         initViews();
 
-        convertImageToBase64();
 
-        checkLogin();
+
+       // checkLogin();
 
 
     }
 
-    void checkLogin() {
+   /* void checkLogin() {
         Intent intent = getIntent();
 
         String login_status = intent.getStringExtra("facebooklogin");
@@ -99,7 +104,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             ModelManager.getInstance().getSignUpManager().getSignUpDetails(context, Operations.getSignUpDetails(context, email,
                     first_name, last_name, password, mobile, devicetoken, "A", "driver", vehicle_type, "30.710252502759392", "76.70373268425465", profileimage));
         }
-    }
+    }*/
     //  the image converted into base64 code ...............................
 
     public  void convertImageToBase64() {
@@ -164,7 +169,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private void galleryIntent() {
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
     }
 
@@ -219,6 +224,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void initViews() {
+
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle("Driver Registration");
         setSupportActionBar(toolbar);
@@ -236,6 +242,35 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         edit_vehicleType = (EditText)findViewById(R.id.edit_vehicleType);
         driverimage = (ImageView)findViewById(R.id.driverimage);
         driverimage.setOnClickListener(this);
+        convertImageToBase64();
+
+        edit_vehicleType.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+
+                DialogPlus dialog = DialogPlus.newDialog(context)
+                        .setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, new String[]{"car","cycle","bus","truck"}))
+                        .setExpanded(false)
+                        .setPadding(20,20,20,20)
+                        .setGravity(Gravity.TOP)
+                        .setOnCancelListener(new OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogPlus dialog) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setOnBackPressListener(new OnBackPressListener() {
+                            @Override
+                            public void onBackPressed(DialogPlus dialogPlus) {
+
+                                dialogPlus.dismiss();
+
+                            }
+                        })
+                        .create();
+                dialog.show();
+            }
+        });
 
     }
 
@@ -253,139 +288,88 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         vehicle_type = edit_vehicleType.getText().toString();
 
-        if (status1.equals("facebook")) {
-
-            if (vehicle_type.isEmpty()) {
-
-                edit_vehicleType.setError("please fill the vechile type");
-                return;
-            }
-
-            Log.e("id of the user", id);
-
-
-            dialog = new ACProgressFlower.Builder(this).build();
-            dialog.show();
-
-            ModelManager.getInstance().getUpdateManager().getupdatedetail(context, Operations.updatevichletype(context, id, vehicle_type));
-
-            return;
-        }
-
-        status1 ="simple";
         first_name = edit_firstName.getText().toString();
         last_name = edit_lastName.getText().toString();
         email = editEmail.getText().toString();
         password = editPassword.getText().toString();
         mobile = editMobile.getText().toString();
+
+
         if (first_name.isEmpty() || last_name.isEmpty() || email.isEmpty() || password.isEmpty() || mobile.isEmpty() || vehicle_type.isEmpty()) {
             Toast.makeText(context, "Please fill all the details", Toast.LENGTH_SHORT).show();
             return;
         }
-        dialog = new ACProgressFlower.Builder(this).build();
-        dialog.show();
 
-        ModelManager.getInstance().getSignUpManager().getSignUpDetails(context, Operations.getSignUpDetails(context,
-                email, first_name, last_name, password, mobile, devicetoken, "A", "driver", vehicle_type, "12.1212121", "12.313112133", "profile_pic"));
+        else if (first_name.isEmpty())
 
+            edit_firstName.setError("required");
+
+        else if (email.isEmpty())
+
+            editEmail.setError("required");
+
+        else if (!Utility.emailValidator(email))
+
+            Toast.makeText(context, "Fill valid email id", Toast.LENGTH_SHORT).show();
+
+        else if (password.isEmpty())
+
+            editPassword.setError("Required");
+
+        else if (mobile.isEmpty())
+
+            editMobile.setError("Required");
+
+        else if (vehicle_type.isEmpty())
+
+            edit_vehicleType.setError("Required");
+
+
+
+        else {
+
+            progress_dialog = new SpotsDialog(context);
+            progress_dialog.setTitle("Updating...");
+            progress_dialog.show();
+
+            ModelManager.getInstance().getSignUpManager().getSignUpDetails(context,Config.signUp_url,
+                    Operations.simpleuserRegister(context,email,password,first_name,last_name,edit_vehicleType.getText().toString(),
+                            Config.user_type,devicetoken,Config.device_type,covertedImage,mobile));
+
+
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        EventBus.getDefault().register(this);
+        EventBus.getDefault().register(context);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
-        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(context);
     }
 
     @Subscribe
     public void onEvent(Event event) {
-        if (dialog.isShowing()){
-
-            dialog.dismiss();
-
-        }
 
         switch (event.getKey()) {
-
             case Constants.ACCOUNT_REGISTERED:
-                Toast.makeText(context, event.getValue(), Toast.LENGTH_SHORT).show();
-
+                progress_dialog.dismiss();
+                Intent intent = new Intent(context,LoginActivity.class);
+                startActivity(intent);
+                finish();
                 break;
             case Constants.ACCOUNT_NOT_REGISTERED:
-                Toast.makeText(context, event.getValue(), Toast.LENGTH_SHORT).show();
+                progress_dialog.dismiss();
+                Toast.makeText(context, ""+event.getValue(), Toast.LENGTH_SHORT).show();
                 break;
-
-            case  Constants.vechile_check:
-                String status = event.getValue();
-                Log.e("status",status);
-
-                String[] split = status.split(",");
-                String completestatus = split[split.length-2];
-                id = split[split.length-1];
-
-                if (completestatus.equals("false")) {
-                    edit_firstName.setText(first_name);
-                    edit_lastName.setText(last_name);
-                    editEmail.setText(email);
-                    editPassword.setClickable(false);
-                    editPassword.setEnabled(false);
-                    editMobile.setEnabled(false);
-                    editMobile.setClickable(false);
-                    edit_firstName.setClickable(false);
-                    editEmail.setClickable(false);
-                    edit_lastName.setClickable(false);
-                    edit_firstName.setEnabled(false);
-                    edit_lastName.setEnabled(false);
-                    editEmail.setEnabled(false);
-                    status1 = "facebook";
-                }
-                else {
-                    if (password.length()>0) {
-
-                        Intent intent = new Intent(context,LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                    else {
-                        ModelManager.getInstance().getUserDetailManager().getUserDetails(context,Operations.getUserDetail(context,id,"driver"));
-                    }
-                }
-                break;
-
-            case Constants.update_status:
-
-                String updatestatus= event.getValue();
-                String[] splittext = updatestatus.split(",");
-                LDPreferences.putString(context, "status", "logged");
-
-                String id = splittext[splittext.length-2];
-                String vehiclestatus = splittext[splittext.length-1];
-
-                if (vehiclestatus.equals("true")){
-                    ModelManager.getInstance().getUserDetailManager().getUserDetails(context,Operations.getUserDetail(context,id,"driver"));
-                }
-                else {
-
-                    dialog.dismiss();
-                    Toast.makeText(context, "Please update your vehicle type again.", Toast.LENGTH_SHORT).show();
-                }
-                break;
-
-            case Constants.USER_DETAILS_SUCCESS:
-
-                dialog.dismiss();
-
-                Intent intent1 = new Intent(context,HomePageActivity.class);
-                startActivity(intent1);
-                finish();
-
+            case Constants.SERVER_ERROR:
+                Toast.makeText(context,"please check your internet connection",Toast.LENGTH_LONG).show();
                 break;
         }
     }

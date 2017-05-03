@@ -29,7 +29,7 @@ import cc.cloudist.acplibrary.ACProgressFlower;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * Created by rishav on 2/1/17.
+ * Created by vijay on 2/1/17.
  */
 
 public class CompletedTripsFragment extends Fragment {

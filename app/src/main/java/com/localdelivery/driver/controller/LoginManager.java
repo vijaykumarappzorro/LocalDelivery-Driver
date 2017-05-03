@@ -55,8 +55,10 @@ public class LoginManager {
                 int id = response.getInt("id");
                 String message = response.getString("complete_status");
                 if (id >= 1) {
+
                     LDPreferences.putString(mContext, "driver_id", String.valueOf(id)) ;
-                    EventBus.getDefault().post(new Event(Constants.LOGIN_SUCCESS, String.valueOf(id)));
+
+                    EventBus.getDefault().post(new Event(Constants.LOGIN_SUCCESS,""));
                 }
                 else
                     EventBus.getDefault().post(new Event(Constants.ACCOUNT_NOT_REGISTERED, message));

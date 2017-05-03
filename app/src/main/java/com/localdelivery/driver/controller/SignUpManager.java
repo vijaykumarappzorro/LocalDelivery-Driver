@@ -7,7 +7,6 @@ import android.util.Log;
 import com.localdelivery.driver.model.Constants;
 import com.localdelivery.driver.model.Event;
 import com.localdelivery.driver.model.HttpHandler;
-import com.localdelivery.driver.model.Operations;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -18,9 +17,9 @@ public class SignUpManager {
     private static final String TAG = SignUpManager.class.getSimpleName();
 
 
-    public void getSignUpDetails(Context context, String params) {
+    public void getSignUpDetails(Context context,String url, String params) {
 
-        new ExecuteApi(context).execute(params);
+        new ExecuteApi(context).execute(url,params);
     }
 
     private class ExecuteApi extends AsyncTask<String, String, String> {
@@ -37,11 +36,10 @@ public class SignUpManager {
         }
 
         @Override
-        protected String doInBackground(String... params) {
+        protected String doInBackground(String... strings) {
 
             HttpHandler httpHandler = new HttpHandler();
-            String response = httpHandler.makeServiceCall(params[0]);
-
+            String response = httpHandler.getResponse(strings[0],strings[1]);
             Log.e(TAG, "sign-up response--"+response);
 
             return response;
@@ -50,25 +48,31 @@ public class SignUpManager {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            if (s!=null) {
 
-            try {
-                JSONObject jsonObject = new JSONObject(s);
-                JSONObject response = jsonObject.getJSONObject("response");
-                int id = response.getInt("id");
-                String message = response.getString("message");
+                try {
+                    JSONObject jsonObject = new JSONObject(s);
+                    JSONObject response = jsonObject.getJSONObject("response");
+                    int id = response.getInt("id");
+                    String message = response.getString("message");
 
-                if (id >= 1) {
-                    EventBus.getDefault().post(new Event(Constants.ACCOUNT_REGISTERED, message));
+                    if (id >= 1) {
 
-                    new ChecktheVichleType(mContext).execute(Operations.checkviechletype(mContext, String.valueOf(id), "driver"));
+                        EventBus.getDefault().post(new Event(Constants.ACCOUNT_REGISTERED, ""));
 
+                        //  new ChecktheVichleType(mContext).execute(Operations.checkviechletype(mContext, String.valueOf(id), "driver"));
 
+                    } else
+
+                        EventBus.getDefault().post(new Event(Constants.ACCOUNT_NOT_REGISTERED, message));
+
+                } catch (JSONException ex) {
+                    ex.printStackTrace();
                 }
-                else
-                    EventBus.getDefault().post(new Event(Constants.ACCOUNT_NOT_REGISTERED, message));
+            }
+            else{
 
-            } catch (JSONException ex) {
-                ex.printStackTrace();
+                EventBus.getDefault().post(new Event(Constants.SERVER_ERROR, ""));
             }
 
 

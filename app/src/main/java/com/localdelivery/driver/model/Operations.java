@@ -4,40 +4,35 @@ package com.localdelivery.driver.model;
 import android.content.Context;
 import android.util.Log;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import org.json.JSONObject;
 
 public class Operations {
 
     private static String TAG = Operations.class.getSimpleName();
 
     public static String getLoginDetails(Context context, String email, String password, String deviceToken, String deviceType,
-                                         String user_type, String latitude, String longitude) {
+                                         String user_type) {
 
         String params = Config.login_url+"&email="+email+"&password="+password+"&device_token="+deviceToken+"&device_type="+deviceType
-                +"&user_type="+user_type+"&latitude="+latitude+"&longitude="+longitude;
+                +"&user_type="+user_type;
 
-        Log.v(TAG, "login-parameters---"+params);
+        Log.v(TAG, "loginff-parameters---"+params);
 
         return params;
     }
 
     public static String getSignUpDetails(Context context, String email, String firstName, String lastName, String password, String mobile,
-                                          String deviceToken, String deviceType, String user_type, String vehicle,
-                                          String latitude, String longitude, String profile_pic) {
+                                          String deviceToken, String deviceType, String user_type, String profile_pic,String vehicle) {
 
         String params = null;
-        try {
-            params = Config.signUp_url+"&email="+email+"&firstname="+firstName+"&lastname="+lastName+"&password="+password
-                    +"&mobile="+mobile+"&device_token="+deviceToken+"&device_type="+deviceType +"&user_type="+user_type
-                    +"&vehicle_type="+URLEncoder.encode(vehicle, "utf-8")+"&latitude="+latitude+"&longitude="+longitude+"&profile_pic="+profile_pic;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+
+        params = Config.signUp_url+"&email="+email+"&firstname="+firstName+"&lastname="+lastName+"&password="+password
+                +"&mobile="+mobile+"&device_token="+deviceToken+"&device_type="+deviceType +"&user_type="+user_type+"&vehicle_type="+vehicle
+                +"&profile_pic="+profile_pic;
 
         Log.v(TAG, "sign-up-parameters---"+params);
 
-        return params;
+        return params.replaceAll("\n","");
     }
 
     public  static String checkviechletype(Context context,String id,String user_type){
@@ -99,5 +94,38 @@ public class Operations {
 
 
         return parms;
+    }
+
+    public static String simpleuserRegister(Context context,String emailid,String password ,String firstname,String lastname ,
+                                            String vehicletype, String usertype, String devicetoken,
+                                            String devicetype, String profilepic, String mobileno) {
+        /*String params = Config.fb_login_url+company_id+"&email="+email+"&password=WJBJvfHTRNT"+"&name="+name+"&device_token="+token+"&device_type=A"+"&mobile="+mobile+"&profileImage="+imageUrl+"&facebook_id="+fb_id;*/
+        try {
+            JSONObject postDataParams = new JSONObject();
+
+            postDataParams.put("email", emailid);
+            postDataParams.put("password", password);
+            postDataParams.put("firstname", firstname);
+            postDataParams.put("lastname",lastname);
+            postDataParams.put("vehicle_type",vehicletype);
+            postDataParams.put("user_type",usertype);
+            postDataParams.put("device_token",devicetoken);
+            postDataParams.put("device_type",devicetype);
+            postDataParams.put("profile_pic",profilepic);
+            postDataParams.put("mobile",mobileno);
+            String params = null;
+            try {
+                params = Utility.getPostDataString(postDataParams);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return params;
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+        //     Log.e(TAG, "fb_login params-- "+params);return params;} catch (JSONException e) {e.printStackTrace();}return null;}
+        return null;
     }
 }

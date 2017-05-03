@@ -9,13 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.localdelivery.driver.R;
 import com.localdelivery.driver.controller.ModelManager;
 import com.localdelivery.driver.controller.PendingRequestsManager;
 import com.localdelivery.driver.model.Constants;
 import com.localdelivery.driver.model.Event;
-import com.localdelivery.driver.model.LDPreferences;
 import com.localdelivery.driver.model.Operations;
 import com.localdelivery.driver.views.adapters.RecentRequestAdapter;
 
@@ -75,8 +75,11 @@ public class AllRequestsFragment extends Fragment {
         super.onResume();
         dialog  = new ACProgressFlower.Builder(getActivity()).build();
         dialog.show();
+        /*ModelManager.getInstance().getPendingRequestsManager().getCompleteRequests(context, Operations.getPendingRequests(context,
+                LDPreferences.readString(context, "driver_id")));*/
+
         ModelManager.getInstance().getPendingRequestsManager().getCompleteRequests(context, Operations.getPendingRequests(context,
-                LDPreferences.readString(context, "driver_id")));
+             "6"));
 
     }
 
@@ -86,21 +89,18 @@ public class AllRequestsFragment extends Fragment {
 
             case Constants.PENDING_REQUESTS:
                 dialog.dismiss();
-                String recivemessage = event.getValue();
-                String[] split = recivemessage.split(",");
-                int id = Integer.parseInt(split[split.length - 2]);
-                String message = split[split.length - 1];
-                if (id > 0) {
-                    RecentRequestAdapter adapter = new RecentRequestAdapter(context, PendingRequestsManager.allRequestsList);
+
+
+                   RecentRequestAdapter adapter = new RecentRequestAdapter(context, PendingRequestsManager.allRequestsList);
                     recyclerView.setAdapter(adapter);
                     break;
-                } else {
-                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Error")
-                            .setContentText(message)
-                            .show();
+            case Constants.NOREQUEST:
+                Toast.makeText(context,"No customer Rquest yet",Toast.LENGTH_SHORT).show();
+                break;
 
-                }
+            case Constants.SERVER_ERROR:
+                Toast.makeText(context,"Internet is too  slow",Toast.LENGTH_SHORT).show();
+                break;
 
             case Constants.REQUESTACEPT:
 

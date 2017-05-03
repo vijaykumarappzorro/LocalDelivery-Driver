@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.localdelivery.driver.R;
 
 /**
- * Created by rishav on 2/1/17.
+ * Created by vijay on 2/1/17.
  */
 
 public class PendingTripsFragment extends Fragment {

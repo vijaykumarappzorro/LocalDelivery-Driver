@@ -35,6 +35,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:10.0.0'
     compile 'com.android.support:design:25.1.0'
     compile 'com.mikhaellopez:circularimageview:3.0.2'
+    compile 'com.github.d-max:spots-dialog:0.7@aar'
     compile 'cc.cloudist.acplibrary:library:1.2.1'
     compile 'com.facebook.android:facebook-android-sdk:4.18.0'
     compile 'cn.pedant.sweetalert:library:1.3'
@@ -48,6 +49,7 @@ dependencies {
     compile 'com.android.support:support-v4:25.1.0'
     compile 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
     testCompile 'junit:junit:4.12'
+    compile 'com.orhanobut:dialogplus:1.11@aar'
 }
 
 
